@@ -1,0 +1,123 @@
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag "backend/toastr.min" %>
+
+<% end %>
+
+<% content_for :contenido do %>
+    <div class="col-md-6">
+      <div class="space20">
+      </div>
+      <div class="portlet box blue" style="border: 1px solid #ccc">
+
+        <div class="portlet-body " style="padding: 30px">
+          <form accept-charset="UTF-8" action="/administrador/editar" class="new_administrador" enctype="multipart/form-data" id="new_administrador" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="OrDt2R2P1XrDfmr+v1iDYn5fT0slNHM8jwrxzlm1VLk=" /></div>
+
+            <div class="form-group">
+              <label for="administrador_avatar">Avatar</label>
+              <input id="administrador_avatar" name="administrador[avatar]" type="file" />
+              <p class="help-block">
+                Escoge una imagen de perfil.
+              </p>
+            </div>
+            <div class="form-group">
+              <label for="administrador_usuario">Usuario</label>
+              <input value="<%= @admin.usuario %>" class="form-control" id="administrador_usuario" name="administrador[usuario]" type="text" />
+            </div>
+            <div class="form-group">
+              <label for="administrador_nombres">Nombres</label>
+              <input  value="<%= @admin.nombres %>" class="form-control" id="administrador_nombres" name="administrador[nombres]" type="text" />
+            </div>
+            <div class="form-group">
+              <label for="administrador_apellidos">Apellidos</label>
+              <input  value="<%= @admin.apellidos %>" class="form-control" id="administrador_apellidos" name="administrador[apellidos]" type="text" />
+              <input  value="<%= @admin.id %>" style="display: none" name="administrador[id]" type="text" />
+            </div>
+
+            <div class="form-group">
+              <label for="administrador_es_super_usuario">Es super usuario</label>
+              <input name="administrador[es_super_usuario]" type="hidden" value="0" /><input class="form-control" id="administrador_es_super_usuario" name="administrador[es_super_usuario]" type="checkbox" value="1"
+            <% if @admin.es_super_usuario then %>
+                    checked
+            <% end %>
+              />
+            </div>
+
+
+            <input class="btn btn-primary" name="commit" type="submit" value="Guardar" /><br/>
+            <a data-target="#password" data-toggle="modal" data-container="body" data-placement="top" href="">Cambiar contraseña</a>
+          </form>
+        </div>
+      </div>
+
+    </div>
+    </div>
+
+    <div class="modal fade" id="password" tabindex="-1" role="basic" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h4 class="modal-title">Cambiar contraseña</h4>
+          </div>
+          <form role="form" method="post" action="/administrador/password/">
+            <div class="modal-body">
+
+
+              <div class="form-body">
+                <div class="form-group">
+                  <label>Contraseña anterior</label>
+                  <input id="" name="passAnterior" class="form-control" placeholder="Contraseña anterior" type="password">
+                </div>
+
+                <div class="form-group">
+                  <label>Contraseña nueva</label>
+                  <input id="" name="passNueva" class="form-control" placeholder="Contraseña nueva" type="password">
+                </div>
+              </div>
+
+              <input type="text" name="idadmin" value="<%= @admin.id %>" id="idadmin" style="display: none"/>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn default" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn blue">Guardar cambios</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+    </div>
+<% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/toastr.min" %>
+    <script>
+        $(function(){
+
+            toastr.options = {
+                "debug": false,
+                "positionClass": "toast-top-right",
+                "onclick": null,
+                "showDuration": "3000",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            <% if @notif %>
+            toastr.success("Administrador actualizado", "Transacción exitosa");
+            <% end %>
+            <% if @notifok %>
+            toastr.success("Contraseña actualizada", "Transacción exitosa");
+            <% end %>
+            <% if @notiferror %>
+            toastr.error("Las contraseñas no coinciden", "Transacción fallida");
+            <% end %>
+        });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

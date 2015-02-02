@@ -1,0 +1,79 @@
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag "backend/toastr.min" %>
+
+<% end %>
+
+<% content_for :contenido do %>
+    <div class="col-md-6">
+      <div class="space20">
+      </div>
+      <div class="portlet box blue" style="border: 1px solid #ccc">
+
+        <div class="portlet-body " style="padding: 30px">
+  <%= form_for @resume, html: { multipart: true } do |f| %>
+
+              <div class="form-group">
+                <%= f.label :avatar %>
+                <%= f.file_field :avatar %>
+                <p class="help-block">
+                  Escoge una imagen de perfil.
+                </p>
+              </div>
+              <div class="form-group">
+                <%= f.label :usuario %>
+                <%= f.text_field :usuario, class: "form-control" %>
+              </div>
+              <div class="form-group">
+                <%= f.label :password %>
+                <%= f.password_field :password, class: "form-control" %>
+              </div>
+              <div class="form-group">
+                <%= f.label :nombres %>
+                <%= f.text_field :nombres, class: "form-control" %>
+              </div>
+              <div class="form-group">
+                <%= f.label :apellidos %>
+                <%= f.text_field :apellidos, class: "form-control" %>
+              </div>
+              <div class="form-group">
+                <%= f.label :es_super_usuario %>
+                <%= f.check_box :es_super_usuario, class: "form-control" %>
+              </div>
+
+
+      <%= f.submit "Guardar", class: "btn btn-primary" %>
+  <% end %>
+        </div>
+      </div>
+
+    </div>
+</div>
+<% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/toastr.min" %>
+    <script>
+        $(function(){
+
+            toastr.options = {
+            "debug": false,
+            "positionClass": "toast-top-right",
+            "onclick": null,
+            "showDuration": "3000",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        <% if @notif %>
+            toastr.success("Administrador registrado", "Transacción exitosa");
+        <% end %>
+        });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

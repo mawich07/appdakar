@@ -1,0 +1,380 @@
+<% content_for :estilos do %>
+<%= stylesheet_link_tag "backend/fullcalendar.min", "backend/datepicker3", "backend/bootstrap-modal-bs3patch",
+                        "backend/bootstrap-modal", "backend/toastr.min" %>
+    <style>
+      .popover-content{
+          z-index: 1060 !important;
+      }
+
+            .fc-content{
+                cursor: pointer;
+            }
+    </style>
+<% end %>
+
+
+<% content_for :contenido do %>
+      <div class="portlet box blue calendar">
+        <div class="portlet-title">
+          <div class="caption">
+            <i class="fa fa-gift"></i>Calendario
+          </div>
+        </div>
+        <div class="portlet-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <div id="calendar" class="has-toolbar">
+              </div>
+            </div>
+          </div>
+          <!-- END CALENDAR PORTLET-->
+        </div>
+      </div>
+
+    <div class="modal fade" id="ajax-modal" role="basic" aria-hidden="true">
+      <div class="page-loading page-loading-boxed">
+        <img src="../../assets/global/img/loading-spinner-grey.gif" alt="" class="loading">
+										<span>
+										&nbsp;&nbsp;Loading... </span>
+      </div>
+      <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+      </div>
+    </div>
+
+<% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/moment.min", "backend/fullcalendar.min",
+                               "backend/es", "backend/bootstrap-datepicker", "backend/bootstrap-modalmanager",
+                               "backend/bootstrap-modal", "backend/toastr.min" %>
+
+<script type="text/javascript" charset="utf-8">
+    var fecha= null;
+    $(function(){
+
+        var $modal = $('#ajax-modal');
+        var Calendar = function() {
+
+
+            return {
+                //main function to initiate the module
+                init: function() {
+                    Calendar.initCalendar();
+                },
+
+                initCalendar: function() {
+
+                    if (!jQuery().fullCalendar) {
+                        return;
+                    }
+
+                    var date = new Date();
+                    var d = date.getDate();
+                    var m = date.getMonth();
+                    var y = date.getFullYear();
+
+                    var h = {};
+
+                    if (Metronic.isRTL()) {
+                        if ($('#calendar').parents(".portlet").width() <= 720) {
+                            $('#calendar').addClass("mobile");
+                            h = {
+                                right: 'title, prev, next',
+                                center: '',
+                                left: 'agendaDay, agendaWeek, month, today'
+                            };
+                        } else {
+                            $('#calendar').removeClass("mobile");
+                            h = {
+                                right: 'title',
+                                center: '',
+                                left: 'agendaDay, agendaWeek, month, today, prev,next'
+                            };
+                        }
+                    } else {
+                        if ($('#calendar').parents(".portlet").width() <= 720) {
+                            $('#calendar').addClass("mobile");
+                            h = {
+                                left: 'title, prev, next',
+                                center: '',
+                                right: 'today,month,agendaWeek,agendaDay'
+                            };
+                        } else {
+                            $('#calendar').removeClass("mobile");
+                            h = {
+                                left: 'title',
+                                center: '',
+                                right: 'prev,next,today,month,agendaWeek,agendaDay'
+                            };
+                        }
+                    }
+
+                    var initDrag = function(el) {
+                        // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                        // it doesn't need to have a start or end
+                        var eventObject = {
+                            title: $.trim(el.text()) // use the element's text as the event title
+                        };
+                        // store the Event Object in the DOM element so we can get to it later
+                        el.data('eventObject', eventObject);
+                        // make the event draggable using jQuery UI
+                        el.draggable({
+                            zIndex: 999,
+                            revert: true, // will cause the event to go back to its
+                            revertDuration: 0 //  original position after the drag
+                        });
+                    };
+
+                    var addEvent = function(title) {
+                        title = title.length === 0 ? "Untitled Event" : title;
+                        var html = $('<div class="external-event label label-default">' + title + '</div>');
+                        jQuery('#event_box').append(html);
+                        initDrag(html);
+                    };
+
+                    $('#external-events div.external-event').each(function() {
+                        initDrag($(this));
+                    });
+
+                    $('#event_add').unbind('click').click(function() {
+                        var title = $('#event_title').val();
+                        addEvent(title);
+                    });
+
+                    //predefined events
+                    $('#event_box').html("");
+                    addEvent("My Event 1");
+                    addEvent("My Event 2");
+                    addEvent("My Event 3");
+                    addEvent("My Event 4");
+                    addEvent("My Event 5");
+                    addEvent("My Event 6");
+
+                    $('#calendar').fullCalendar('destroy'); // destroy the calendar
+                    var calendar = $('#calendar').fullCalendar({ //re-initialize the calendar
+                        header: h,
+                        lang: 'es',
+                        defaultView: 'month', // change default view with available options from http://arshaw.com/fullcalendar/docs/views/Available_Views/
+                        slotMinutes: 15,
+                        editable: false,
+                        selectable: true,
+                        droppable: false, // this allows things to be dropped onto the calendar !!!
+                        select: function(start, end) {
+                            fecha = start._d.toISOString().split("T")[0];
+                                var url = '/cita/hora/?id='+fecha;
+                                $('body').modalmanager('loading');
+
+                                setTimeout(function(){
+                                    $modal.load(url, '', function(){
+                                        $modal.modal();
+                                    });
+                                }, 500);
+
+                        },
+                        eventClick: function(calEvent, jsEvent, view) {
+
+                            //display a modal
+                            var url = '/cita/datos/?id='+calEvent.id;
+                            $('body').modalmanager('loading');
+
+                            setTimeout(function(){
+                                $modal.load(url, '', function(){
+                                    $('.date-picker').datepicker({
+                                        rtl: Metronic.isRTL(),
+                                        orientation: "left",
+                                        format: "yyyy-mm-dd",
+                                        autoclose: true
+                                    });
+                                    $modal.modal();
+                                });
+                            }, 500);
+
+                        },
+                        events: [
+                        <% @citas.each do |c| %>
+
+                            {
+                                id: <%= c.id %>,
+                                <% if c.paciente != nil %>
+                                title: "<%= c.paciente.nombres %> <%= c.paciente.apellidos %>",
+                                <% else  %>
+                                title: "<%= c.nombre %>",
+                                <% end %>
+                                start: new Date(<%= c.fecha.year %>, <%= c.fecha.month-1 %>, <%= c.fecha.day %>, <%= c.hora.split(":")[0] %>, <%= c.hora.split(":")[1] %>),
+                                end: new Date(<%= c.fecha.year %>, <%= c.fecha.month-1 %>, <%= c.fecha.day %>, new Date(new Date(<%= c.fecha.year %>, <%= c.fecha.month-1 %>, <%= c.fecha.day %>, <%= c.hora.split(":")[0] %>, <%= c.hora.split(":")[1] %>).getTime() + 30*60000).getHours(), new Date(new Date(<%= c.fecha.year %>, <%= c.fecha.month-1 %>, <%= c.fecha.day %>, <%= c.hora.split(":")[0] %>, <%= c.hora.split(":")[1] %>).getTime() + 30*60000).getMinutes()),
+                                <% if c.fecha < Time.new.to_date %>
+                                    backgroundColor: "#888",
+                                    borderColor: "#888",
+                                <% elsif c.fecha > Time.new.to_date %>
+                                    backgroundColor: "#9ABF8C",
+                                    borderColor: "#9ABF8C",
+                                <% elsif c.fecha == Time.new.to_date %>
+                                    backgroundColor: "#4B8DF8",
+                                    borderColor: "#4B8DF8",
+                                <% end %>
+                                allDay: false
+                            },
+
+                        <% end %>
+                            ],
+                        timeFormat: {
+                            month: 'H:mm'
+                        }
+                    });
+
+                }
+
+            };
+
+        }();
+        Calendar.init();
+
+        $(document).on("click", "#btnCancelar", function(){
+            $("#editar").remove();
+            $(".modal-backdrop").remove();
+            $(".modal-scrollable").remove();
+        });
+
+        $(document).on("click", ".hora", function(){
+            var fi = null;
+            var ff = null;
+
+            switch ($(this).attr("id")) {
+                case "h1":
+                    fi = fecha+'T07:00:00.000Z';
+                    ff = fecha+'T07:30:00.000Z';
+                    break;
+                case "h2":
+                    break;
+                case "h3":
+                    fi = fecha+'T08:00:00.000Z';
+                    ff = fecha+'T08:30:00.000Z';
+                    break;
+                case "h4":
+                    break;
+                case "h5":
+                    break;
+                case "h6":
+                    break;
+                case "h7":
+                    break;
+                case "h8":
+                    break;
+                case "h9":
+                    fi = fecha+'T11:30:00.000Z';
+                    ff = fecha+'T12:00:00.000Z';
+                    break;
+            }
+            $('#calendar').fullCalendar( 'addEventSource', [
+                        {
+                            id: -1,
+                            title  : 'Eduardo Aldaz',
+                            start: fi,
+                            end: ff,
+                            backgroundColor: "#9ABF8C",
+                            borderColor: "#9ABF8C"
+                        }
+                    ]
+            );
+        });
+
+        $(document).on("change", "#username2_input", function(){
+            var input = $(this);
+
+            if (input.val() === "") {
+                return;
+            }
+
+            input.attr("readonly", true).
+                    attr("disabled", true).
+                    addClass("spinner");
+
+            $.get('/cita/verificarpac/', {
+                cedula: input.val()
+            }, function (res) {
+                input.attr("readonly", false).
+                        attr("disabled", false).
+                        removeClass("spinner");
+
+                // change popover font color based on the result
+                if (res.status == 'OK') {
+                    $("#error").slideUp();
+                    $("#btnAceptar").removeClass("disabled");
+                    input.closest('.form-group').removeClass('has-error').addClass('has-success');
+                    $('.icon-exclamation-sign', input.closest('.form-group')).remove();
+                    input.before('<i class="icon-ok"></i>');
+                    input.data('bs.popover').tip().removeClass('error').addClass('success');
+                } else {
+                    $("#error").slideDown();
+                    $("#btnAceptar").addClass("disabled");
+                    input.closest('.form-group').removeClass('has-success').addClass('has-error');
+                    $('.icon-ok', input.closest('.form-group')).remove();
+                    input.before('<i class="icon-exclamation-sign"></i>');
+
+                    input.data('bs.popover').tip().removeClass('success').addClass('error');
+
+                    Metronic.setLastPopedPopover(input);
+                }
+
+            }, 'json');
+
+
+        });
+
+        <% if @notifvacante then %>
+        toastr.options = {
+            "debug": false,
+            "positionClass": "toast-top-right",
+            "onclick": null,
+            "showDuration": "3000",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        toastr.warning("No hay citas vacantes para ese día", "Transacción fallida");
+        <% end %>
+        <% if @notiffecha then %>
+        toastr.options = {
+            "debug": false,
+            "positionClass": "toast-top-right",
+            "onclick": null,
+            "showDuration": "3000",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        toastr.success("Transacción exitosa","La fecha de la cita ha sido modificada");
+        <% end %>
+        <% if @notifnuevo then %>
+        toastr.options = {
+            "debug": false,
+            "positionClass": "toast-top-right",
+            "onclick": null,
+            "showDuration": "3000",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        toastr.success("Transacción exitosa","La cita ha sido creada");
+        <% end %>
+
+
+    });
+</script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

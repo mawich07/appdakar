@@ -1,0 +1,223 @@
+
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag  "backend/toastr.min", "backend/sweet-alert" %>
+    <style>
+
+        .acciones{
+            font-size: 16px !important;
+            cursor: pointer;
+        }
+
+        .eliminar{
+            color: #F3565D;
+        }
+
+        .editar{
+            color: #45B6AF;
+        }
+    </style>
+<% end %>
+
+<% content_for :contenido do %>
+    <div class="col-md-7">
+
+      <div class="portlet light">
+        <div class="portlet-title">
+          <div class="caption font-green-sharp">
+            <i class="icon-question  font-green-sharp"></i>
+            <span class="caption-subject"> Preguntas</span>
+          </div>
+        </div>
+        <div class="portlet-body">
+
+          <div class="panel-group accordion" id="accordion3">
+            <% @cont = 0 %>
+            <% @preg.each do |p| %>
+                <% @cont += 1 %>
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a class="accordion-toggle accordion-toggle-styled
+                      <% if @cont != 1 then %>collapsed<%end%>" data-toggle="collapse" data-parent="#accordion3" href="#collapse_<%= @cont %>">
+
+                        <i data-target="#editar" data-id="<%= p.id  %>" data-toggle="modal" data-container="body" data-placement="top" data-original-title="Editar" class="acciones editar fa fa-pencil tooltips"></i>&nbsp;
+                        <i data-id="<%= p.id  %>" data-container="body" data-placement="top" data-original-title="Eliminar" class="acciones eliminar fa fa-trash tooltips"></i>
+                        &nbsp;
+                        <span class="preguntatxt"><%= p.pregunta %></span>
+
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="collapse_<%= @cont %>" class="panel-collapse collapse <% if @cont == 1 then %>in<%end%>" style="<% if @cont != 1 then %>height: 0px;<%end%>">
+                    <div class="panel-body">
+                      <span class="respuestatxt"><%= p.respuesta %></span> </a>
+                    </div>
+                  </div>
+                </div>
+
+
+            <% end %>
+
+          </div>
+          <form id="frmEliminarPregunta" action="/pfrecuentes/eliminar" method="post" style="display: none">
+            <input type="text" id="idpregunta" name="idpregunta"/>
+          </form>
+
+        </div>
+      </div>
+
+      </div>
+
+    <div class="col-md-5">
+      <div class="portlet light">
+        <div class="portlet-title">
+          <div class="caption font-green-sharp">
+            <i class="icon-plus  font-green-sharp"></i>
+            <span class="caption-subject"> Nuevo</span>
+          </div>
+          <div class="actions">
+            <a id="nueva-fila" href="#" class="btn btn-circle green-jungle ">
+              <i class="fa fa-plus"></i> </a>
+
+            <a title="" data-original-title="" href="#" class="btn btn-circle btn-default btn-icon-only fullscreen"></a>
+          </div>
+        </div>
+        <div class="portlet-body">
+
+          <form role="form" method="post" action="/pfrecuentes/nuevo/">
+            <div id="formNuevaPregunta">
+            <div id="cont-pregunta">
+              <div class="form-body">
+                <div class="form-group">
+                  <input name="pregunta[]" class="form-control" placeholder="Pregunta" type="text">
+                </div>
+                <div class="form-group">
+                  <textarea class="form-control" placeholder="Respuesta" name="respuesta[]" cols="2" rows="1"></textarea>
+                </div>
+              </div>
+            <hr/>
+            </div>
+            </div>
+            <button type="submit" class="btn btn-circle blue-madison ">
+              <i class="fa fa-check"></i> Guardar </button>
+          </form>
+
+        </div>
+      </div>
+
+      </div>
+
+      </div>
+
+    <div class="modal fade" id="editar" tabindex="-1" role="basic" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h4 class="modal-title">Editar prefunta frecuente</h4>
+          </div>
+          <form role="form" method="post" action="/pfrecuentes/editar/">
+            <div class="modal-body">
+
+
+              <div class="form-body">
+                <div class="form-group">
+                  <label>Pregunta</label>
+                  <input id="pregunta" name="pregunta" class="form-control" placeholder="Pregunta" type="text">
+                </div>
+              </div>
+              <div class="form-body">
+                <div class="form-group">
+                  <label>Respuesta</label>
+                  <textarea class="form-control" placeholder="Respuesta" name="respuesta" id="respuesta" cols="3" rows="2"></textarea>
+                </div>
+              </div>
+
+              <input type="text" name="idpregunta" id="idpregunta" style="display: none"/>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn default" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn blue">Guardar cambios</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+<% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/toastr.min", "backend/sweet-alert.min" %>
+
+    <script type="text/javascript" charset="utf-8">
+        $(function(){
+
+            toastr.options = {
+                "debug": false,
+                "positionClass": "toast-top-right",
+                "onclick": null,
+                "showDuration": "3000",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            $(".eliminar").click(function(){
+                var id = $(this).attr("data-id");
+                swal({
+                            title: "¿Eliminar?",
+                            text: $(this).parent().find(".preguntatxt").html() + " se borrará permanentemente!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            cancelButtonText: "Cancelar",
+                            confirmButtonText: "Sí, eliminarla!",
+                            closeOnConfirm: true
+                        },
+                        function(){
+
+                            $("#idpregunta").val(id);
+                            $("#frmEliminarPregunta").submit();
+
+                        });
+            });
+
+            $(".editar").click(function(){
+                var id =$(this).attr("data-id");
+                var preg = $(this).parent().find(".preguntatxt").html();
+                var resp = $(this).parent().parent().parent().parent().find(".respuestatxt").html();
+                $("#pregunta").val(preg);
+                $("#respuesta").val(resp);
+                $("#idpregunta").val(id);
+            });
+
+
+            $("#nueva-fila").click(function(){
+                var a = $("#cont-pregunta").clone();
+                a.attr("id","");
+                a.find(".form-control").val("");
+                a.appendTo("#formNuevaPregunta");
+            });
+
+
+            <% if @notifeditar %>
+            toastr.success("Pregunta frecuente actualizada", "Transacción exitosa");
+            <% end %>
+            <% if @notifnuevo %>
+            toastr.success("Pregunta frecuente registrada", "Transacción exitosa");
+            <% end %>
+            <% if @notifeliminar %>
+            toastr.success("Pregunta frecuente eliminada", "Transacción exitosa");
+            <% end %>
+
+
+
+        });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

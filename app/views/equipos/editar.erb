@@ -1,0 +1,72 @@
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag "backend/toastr.min" %>
+
+<% end %>
+
+<% content_for :contenido do %>
+    <div class="col-md-6">
+      <div class="space20">
+      </div>
+      <div class="portlet box blue" style="border: 1px solid #ccc">
+
+        <div class="portlet-body " style="padding: 30px">
+          <form accept-charset="UTF-8" action="/equipo/editar" class="new_tratamiento" enctype="multipart/form-data" id="new_tratamiento" method="post">
+            <div style="margin:0;padding:0;display:inline">
+              <input name="utf8" type="hidden" value="&#x2713;" />
+              <input name="authenticity_token" type="hidden" value="OrDt2R2P1XrDfmr+v1iDYn5fT0slNHM8jwrxzlm1VLk=" />
+            </div>
+
+            <div class="form-group">
+              <label for="">Imagen</label>
+              <input id="tratamiento_imagenurl" name="equipo[imagenurl]" type="file" />
+              <p class="help-block">
+                Escoge una imagen del tratamiento.
+              </p>
+            </div>
+            <div class="form-group">
+              <label for="">Título</label>
+              <input value="<%= @equipo.nombre %>" class="form-control" id="tratamiento_nombre" name="equipo[nombre]" placeholder="Título" type="text" required/>
+              <input value="<%= @equipo.id %>" class="form-control" id="tratamiento_nombre" name="equipo[id]" placeholder="Título" type="text" style="display: none" />
+            </div>
+            <div class="form-group">
+              <label for="tratamiento_descripcion">Descripcion</label>
+              <textarea class="form-control" id="tratamiento_descripcion" name="equipo[descripcion]" placeholder="Descripción" required><%= @equipo.descripcion %></textarea>
+            </div>
+
+
+            <input class="btn btn-primary" name="commit" type="submit" value="Registrar" />
+          </form>
+        </div>
+      </div>
+
+    </div>
+    </div>
+<% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/toastr.min" %>
+    <script>
+        $(function(){
+
+            toastr.options = {
+                "debug": false,
+                "positionClass": "toast-top-right",
+                "onclick": null,
+                "showDuration": "3000",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            <% if @notif %>
+            toastr.success("Administrador registrado", "Transacción exitosa");
+            <% end %>
+        });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

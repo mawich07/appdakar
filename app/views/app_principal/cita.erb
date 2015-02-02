@@ -1,0 +1,157 @@
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag "frontend/calendar/fullcalendar", "backend/datepicker3" %>
+    <%= stylesheet_link_tag "frontend/calendar/fullcalendar.print", media: "print" %>
+<% end %>
+
+<% content_for :contenido do %>
+<div class="container xsx-width">
+  <div class="space"></div>
+
+  <div id="calendar"></div>
+
+  <div class="row">
+              <div id="map"></div>
+
+  </div>
+</div>
+<br/><br/>
+    <div class="modal fade" id="ajax-modal" role="basic" aria-hidden="true">
+      <div class="page-loading page-loading-boxed">
+        <img src="../../assets/global/img/loading-spinner-grey.gif" alt="" class="loading">
+										<span>
+										&nbsp;&nbsp;Loading... </span>
+      </div>
+      <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modal2" role="basic" aria-hidden="true">
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" style="margin-top:-10px;">&times;</button>
+            <h4>Cambiar fecha de la cita</h4>
+          </div>
+          <form method="post" action="/cita/editar/">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="input-icon">
+                      <i class="icon-calendar"></i>
+                      <input id="fechacita" class="form-control form-control-inline input-medium date-picker" type="text" value="" name="fecha" placeholder="Nueva fecha"/>
+                      <input style="display: none" id="idcita" type="text" value="" name="idcita"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button name="btnCancelar" type="submit" class="btn btn-danger"> Cancelar cita</button>
+              <button name="btnGuardar" type="submit" class="btn btn-success"> Guardar cambios</button>
+              <button id="btnCancelar" type="button" class="btn default" data-dismiss="modal"> Cerrar</button>
+            </div>
+          </form>
+        </div>
+    </div>
+<% end %>
+
+<% content_for :inscripts do %>
+
+
+    <%= javascript_include_tag "frontend/calendar/bootbox.min" %>
+    <%= javascript_include_tag "frontend/calendar/fullcalendar" %>
+    <%= javascript_include_tag "frontend/calendar/es", "backend/bootstrap-datepicker" %>
+
+    <script type="text/javascript">
+        var fecha = null, modal = null;
+        jQuery(function($) {
+            var $modal = $('#ajax-modal');
+            var $modal2 = $('#modal2');
+            var calendar = $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultView: 'month',
+                lang: 'es',
+                selectable: true,
+                selectHelper: true,
+                select: function(start, end) {
+                    fecha = start._d.toISOString().split("T")[0];
+                    var url = '/cita/horausr/?id='+fecha;
+                    $('body').modalmanager('loading');
+
+                    setTimeout(function(){
+                        $modal.load(url, '', function(){
+                            $modal.modal();
+                        });
+                    }, 500);
+
+                },
+                editable: false,
+                eventLimit: true, // allow "more" link when too many events,
+                eventClick: function(calEvent, jsEvent, view) {
+                    if (<%= @idpac %> == calEvent.idpac) {
+                    //display a modal
+                        $("#idcita").val(calEvent.id);
+                        $("#fechacita").val(calEvent.start._d.toISOString().split("T")[0]);
+                        $('.date-picker').datepicker({
+                            orientation: "left",
+                            format: "yyyy-mm-dd",
+                            autoclose: true
+                        });
+                        $modal2.modal();
+                    }
+                },
+                events: [
+                    <% @citas.each do |c| %>
+
+                    {
+                        id: <%= c.id %>,
+                        <% if c.paciente then %>
+                            idpac: <%= c.paciente.id %>,
+                            <% if @idpac == c.paciente.id then %>
+                            backgroundColor: "#4EB724",
+                            borderColor: "#4EB724",
+                            title: "<%= c.paciente.nombres %> <%= c.paciente.apellidos %>",
+                            <% else %>
+                            backgroundColor: "#888",
+                            borderColor: "#888",
+                            title: "Reservado",
+                            <% end %>
+                        <% else %>
+                            idpac: 0,
+                            backgroundColor: "#888",
+                            borderColor: "#888",
+                            title: "Reservado",
+                        <% end %>
+
+                        start: new Date(<%= c.fecha.year %>, <%= c.fecha.month-1 %>, <%= c.fecha.day %>, <%= c.hora.split(":")[0] %>, <%= c.hora.split(":")[1] %>),
+                        end: new Date(<%= c.fecha.year %>, <%= c.fecha.month-1 %>, <%= c.fecha.day %>, new Date(new Date(<%= c.fecha.year %>, <%= c.fecha.month-1 %>, <%= c.fecha.day %>, <%= c.hora.split(":")[0] %>, <%= c.hora.split(":")[1] %>).getTime() + 30*60000).getHours(), new Date(new Date(<%= c.fecha.year %>, <%= c.fecha.month-1 %>, <%= c.fecha.day %>, <%= c.hora.split(":")[0] %>, <%= c.hora.split(":")[1] %>).getTime() + 30*60000).getMinutes()),
+                        allDay: false
+                    },
+
+                    <% end %>
+                ],
+                timeFormat: {
+                    month: 'H:mm'
+                }
+            });
+
+            $('.date-picker').datepicker({
+                orientation: "left",
+                format: "yyyy-mm-dd",
+                autoclose: true
+            });
+
+        })
+
+    </script>
+<% end %>
+
+<%= render template: "layouts/usuariobase" %>

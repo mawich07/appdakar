@@ -1,0 +1,28 @@
+
+    <div class="modal-content">
+      <form action="/cita/nuevo/usr" method="post">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" style="margin-top:-10px;">&times;</button>
+        <h4>Nueva cita para el <%= @fecha %> a las <%= @nhora %></h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="col-md-6">
+            <p>Presione aceptar para crear la cita.</p>
+            <div class="form-group" style="display: none">
+              <div class="input-icon">
+                <i class="icon-credit-card"></i>
+                <input style="display: none" type="text" name="fecha" value="<%= @fecha %>">
+                <input style="display: none" type="text" name="hora" value="<%= @nhora %>">              </div>
+            </div>
+          </div>
+          <div class="col-md-3"></div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button id="btnAceptar" type="submit" class="btn btn-primary " > Aceptar</button>
+      </div>
+      </form>
+    </div>

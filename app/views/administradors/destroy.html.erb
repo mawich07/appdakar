@@ -1,0 +1,26 @@
+<div id="editar" class="modal fade" data-backdrop="static">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" style="margin-top:-10px;">&times;</button>
+    <h4>Cambiar fecha de la cita</h4>
+  </div>
+  <div class="modal-body">
+    <button type="button" class="close" data-dismiss="modal" style="margin-top:-10px;">&times;</button>
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <div class="input-icon">
+            <i class="icon-calendar"></i>
+            <input class="form-control form-control-inline input-medium date-picker" type="text" value="" name="fecha" placeholder="Nueva fecha"/>
+            <input style="display: none" type="text" value="'+calEvent.id+'" name="idcita"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button name="btnCancelar" type="button" class="btn btn-danger" data-action="cancelar"> Cancelar cita</button>
+    <button name="btnGuardar" type="button" class="btn btn-success" data-action="guardar"> Guardar cambios</button>
+    <button id="btnCancelar" type="button" class="btn default" data-dismiss="modal"> Cerrar</button>
+  </div>
+</div>

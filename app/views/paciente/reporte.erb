@@ -1,0 +1,269 @@
+
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag "backend/daterangepicker-bs3" %>
+
+<% end %>
+
+<% content_for :contenido do %>
+
+
+      <div class="col-md-12">
+        <div class="portlet box blue" style="border: none">
+
+          <div class="portlet-body " style="padding: 20px">
+            <div class="row">
+            <div class="col-md-10">
+              <div class="btn-group">
+                <div id="reportrange" class="btn btn-default">
+                  <i class="fa fa-calendar"></i>
+                  &nbsp; <span>
+													</span>
+                  <b class="fa fa-angle-down"></b>
+                </div>
+                <div class="btn-group">
+                  <button id="btnEnfermedades" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-ellipsis-horizontal"></i> <%= @pat_nombre %> <i class="fa fa-angle-down"></i>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a data-id="0" class="enfermedad" href="#">
+                        Todas las enfermedades </a>
+                    </li>
+                    <% @enfermedades.each do |e| %>
+                        <li>
+                          <a data-id="<%= e.id %>" class="enfermedad" href="#">
+                            <%= e.nombre %> </a>
+                        </li>
+                    <%end%>
+                  </ul>
+                </div>
+
+                <div class="btn-group">
+                  <button id="btnGrafica" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-ellipsis-horizontal"></i> <%= @grafi %> <i class="fa fa-angle-down"></i>
+                  </button>
+                  <ul id="menu-grafica" class="dropdown-menu">
+                    <li>
+                      <a data-id="li" class="grafica" href="#">
+                        Gráfica lineal </a>
+                    </li>
+                    <li>
+                      <a data-id="ba" class="grafica" href="#">
+                        Gráfica de barras </a>
+                    </li>
+                    <li>
+                      <a data-id="co" class="grafica" href="#">
+                        Gráfica de columnas </a>
+                    </li>
+                    <li>
+                      <a data-id="pa" class="grafica" href="#">
+                        Gráfica de pastel </a>
+                    </li>
+                  </ul>
+                </div>
+                <button id="filtrar" type="button" class="btn blue">Filtrar</button>
+                <form id="frmFiltro" style="display: none" action="/pacientes/reporte/filtrar/" method="post">
+                  <input id="desde" type="text" name="desde"/>
+                  <input id="hasta" type="text" name="hasta"/>
+                  <input id="idEnfermedad" type="text" name="patologia" value="<%= @patologia %>"/>
+                  <input id="idGrafica" type="text" name="grafica" value="<%= @grafica %>"/>
+                </form>
+              </div>
+            </div>
+          </div>
+            <br/>
+            <div class="row">
+              <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+<% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/moment.min","backend/daterangepicker", "backend/highcharts", "backend/exporting" %>
+
+    <script type="text/javascript" charset="utf-8">
+        $(function(){
+
+            $("#filtrar").click(function(){
+                $("#desde").val($("input[name='daterangepicker_start']").val());
+                $("#hasta").val($("input[name='daterangepicker_end']").val());
+                $("#frmFiltro").submit();
+            });
+
+            $(".enfermedad").click(function(){
+                $("#btnEnfermedades").html($(this).html() + ' <i class="fa fa-angle-down"></i>');
+                $("#idEnfermedad").val($(this).attr("data-id"));
+                if($(this).attr("data-id") == "0"){
+                    if($('a[data-id="pa"]').length < 1){
+                        $("#menu-grafica").append('<li><a data-id="pa" class="grafica" href="#">Gráfica de pastel </a></li>');
+                    }
+                }
+                else {
+                    if($('a[data-id="pa"]').length > 0) {
+                        $('li a[data-id="pa"]').remove();
+                    }
+                }
+            });
+
+            $(".grafica").click(function(){
+                $("#btnGrafica").html($(this).html() + ' <i class="fa fa-angle-down"></i>');
+                $("#idGrafica").val($(this).attr("data-id"));
+            });
+
+            $('#reportrange').daterangepicker({
+                        opens: (Metronic.isRTL() ? 'left' : 'right'),
+                        startDate: moment().subtract('days', 29),
+                        endDate: moment(),
+                        minDate: '2013-01-01',
+                        maxDate: '2014-12-31',
+                        showDropdowns: true,
+                        showWeekNumbers: true,
+                        timePicker: false,
+                        timePickerIncrement: 1,
+                        timePicker12Hour: true,
+                        ranges: {
+                            'Últimos 7 días': [moment().subtract('days', 6), moment()],
+                            'Últimos 30 días': [moment().subtract('days', 29), moment()],
+                            'Este mes': [moment().startOf('month'), moment().endOf('month')],
+                            'Mes anterior': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                            'Este año': [moment().startOf('year'), moment().endOf('year')],
+                            'Año anterior': [moment().subtract('year', 1).startOf('year'), moment().subtract('year', 1).endOf('year')]
+                        },
+                        buttonClasses: ['btn'],
+                        applyClass: 'green',
+                        cancelClass: 'default',
+                        format: 'YYYY-MM-DD',
+                        separator: ' al ',
+                        locale: {
+                            applyLabel: 'OK',
+                            cancelLabel: 'CANCELAR',
+                            fromLabel: 'Desde',
+                            toLabel: 'Hasta',
+                            customRangeLabel: 'Personalizado',
+                            daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                            firstDay: 1
+                        }
+                    },
+                    function (start, end) {
+                        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                    }
+            );
+
+            $("input[name='daterangepicker_start']").val("<%= @desde %>");
+            $("input[name='daterangepicker_end']").val("<%= @hasta %>");
+            //Set the initial state of the picker label
+            <% if @desde then %>
+                $('#reportrange span').html(moment("<%= @desde %>").format('MMMM D, YYYY') + ' - ' + moment("<%= @hasta %>").format('MMMM D, YYYY'));
+            <% else %>
+                $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+            <% end %>
+
+            Highcharts.setOptions({
+                lang: {
+                    months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',  'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+                }
+            });
+
+            $('#container').highcharts({
+                chart: {
+                    type: '<%= @tipo_grafica %>'
+                },
+                title: {
+                    text: '<%= @leyenda %>',
+                    x: -20
+                },
+                subtitle: {
+                    text: 'CENTRO DE REHABILITACIÓN FÍSICA Y DEPORTIVA DR. DAKAR AGUIRRE',
+                    x: -20
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Pacientes'
+                    },
+                    allowDecimals: false,
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }],
+                    min: 0,
+                    max: 10,
+                    plotBands: [{
+                        from: 0,
+                        to: 2,
+                        color: 'rgba(68, 0, 213, 0.1)'
+                    },
+                        {
+                        from: 2,
+                        to: 6,
+                        color: 'rgba(214, 181, 105, 0.1)'
+                    },
+                        {
+                        from: 6,
+                        to: 10,
+                        color: 'rgba(111, 173, 90, 0.1)'
+                    }]
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    <% if @tipo_grafica == "area" or @tipo_grafica == "bar" or @tipo_grafica == "column" then %>
+                    spline: {
+                        marker: {
+                            enabled: false,
+                            symbol: 'circle',
+                            radius: 2,
+                            states: {
+                                hover: {
+                                    enabled: true
+                                }
+                            }
+                        }
+                    }
+                    <% else %>
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.0f} %',
+                                style: {
+                                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                }
+                            }
+                        }
+                    <%end%>
+
+                },
+                series: [{
+                    name: 'Pacientes',
+                    data: [
+                        <% if @tipo_grafica == "spline" or @tipo_grafica == "bar" or @tipo_grafica == "column" then %>
+                            <% @pac_atendidos.each do |r| %>
+                                [Date.UTC(<%=r[0].year%>,<%=r[0].month-1%>,<%=r[0].day%>), <%=r[1]%>],
+                            <%end%>
+                        <% else %>
+                            <% @pac_atendidos.each do |r| %>
+                                ['<%=r.nombre%>', <%=r.cantidad%>],
+                            <%end%>
+                        <%end%>
+                    ]
+                }]
+            });
+
+        });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <!--[if IE]>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <![endif]-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Clinica Dakar</title>
+
+  <!-- ========== FAVICON ========== -->
+  <link href='http://fonts.googleapis.com/css?family=Quicksand' rel='stylesheet' type='text/css'>
+  <link rel="shortcut icon" media="screen" href="favicon.ico">
+  <style>
+      .btnSesion{
+          border: none !important;
+          margin-top: 8px;
+      }
+
+      #btnAcceder{
+          background: #62C6F8;
+      }
+      #btnRegistrar{
+          background: #eca49e;
+      }
+      #horarios *{
+          text-align: center;
+      }
+  </style>
+  <!-- ========== CSS Customization  ========== -->
+  <%= stylesheet_link_tag "frontend/style", "backend/bootstrap-modal-bs3patch",
+                          "backend/bootstrap-modal" %>
+  <%= yield :estilos %>
+</head>
+
+<body class="fixed-footer">
+
+<main>
+<!-- ================================ -->
+<!-- ========== Begin Header ========== -->
+<!-- ================================ -->
+<header class="style_6 affix-menu">
+
+  <!-- ===== Begin Trigger Top Nav ===== -->
+  <ul class="navi">
+    <li><a><i class="fa fa-angle-down"></i></a></li>
+  </ul>
+  <!-- ===== End Trigger Top Nav ===== -->
+
+  <!-- ===== Begin Navbar ===== -->
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container xsx-width">
+      <!-- ===== Brand and toggle get grouped for better mobile display ===== -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="span-01"></span>
+          <span class="span-02"></span>
+          <span class="span-03"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          <img src="/assets/frontend/logo.png" height="50" alt="Logo">
+          <span style="font-family: Quicksand">REHABILITACIÓN DAKAR</span>
+        </a>
+      </div>
+      <!-- ===== End Brand and Toggle ===== -->
+
+      <!-- ===== Collect the nav links, forms, and other content for toggling ===== -->
+      <div class="collapse navbar-collapse navbar-responsive-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <!-- ===== Home ===== -->
+          <li class="active"><a href="/">Inicio</a></li>
+          <li class="menu-item-has-children">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Nosotros <i class="fa fa-angle-down"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/quienessomos">Quienes somos</a></li>
+              <li><a href="/equiposinfo/">Equipos</a></li>
+              <li><a href="/tratamientosinfo/">Tratamientos</a></li>
+            </ul>
+          </li>
+          <!-- ===== End Home ===== -->
+          <li class=""><a href="/noticias/">Noticias</a></li>
+          <li class=""><a href="/cita/">Citas médicas</a></li>
+          <!-- ===== Contact ===== -->
+          <li class="menu-item-has-children">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contacto <i class="fa fa-angle-down"></i></a>
+            <ul class="dropdown-menu big">
+              <li>
+                <div class="mega-menu-content">
+                  <div class="row">
+                    <!-- ===== Contact information ===== -->
+                    <div class="widget col-xs-12 col-sm-4 col-md-4">
+                      <ul>
+                        <li>
+                          <span>Información de contacto</span>
+                          <ul>
+                            <li>
+                              <address>
+                                <%= @info.direccion %>
+                              </address>
+                            </li>
+                            <li>
+                              <ul>
+                                <li>
+                                  <i class="fa fa-phone"></i>
+                                  <p><strong>Teléfono :</strong> <%= @info.numero_fijo %>, <%= @info.numero_movil %></p>
+                                </li>
+                                <li>
+                                  <i class="fa fa-envelope"></i>
+                                  <p><strong>Email :</strong> <%= @info.email %></p>
+                                </li>
+                              </ul>
+                            </li>
+                            <li>
+                              <p>
+                                <%= @info.como_llegar %>
+                              </p>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                    <!-- ===== End Contact information ===== -->
+
+                    <!-- ===== Map ===== -->
+                    <div class="widget col-xs-12 col-sm-4 col-md-4">
+                      <ul>
+                        <li>
+                          <span>Mapa</span>
+                          <ul>
+                            <li class="map">
+                              <!-- ===== Google Map ===== -->
+                              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1991.6810957710866!2d-79.943341!3d-3.259911000000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x90330e47a36ebb1b%3A0x4502173b274ec2d8!2sCentro+de+Rehabilitaci%C3%B3n+Fisica+y+Deportiva+Dr.+Dakar+Aguirre!5e0!3m2!1sen!2sec!4v1422732488390" width="360" height="180" frameborder="0" style="border:0"></iframe>
+                              <!-- ===== End Google Map ===== -->
+                            </li>
+                            <li>
+                              <p>
+                                UberMenu makes it easy to set a
+                                description or subtitle for any and every
+                                Menu Item.
+                              </p>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                    <!-- ===== End Map ===== -->
+
+                    <!-- ===== Rapid Contact form ===== -->
+                    <div class="widget col-xs-12 col-sm-4 col-md-4">
+                      <ul>
+                        <li>
+                          <span>Formulario de contacto</span>
+                          <ul>
+                            <li>
+                              <form action="/mensaje/nuevo" method="post" role="form">
+                                <div class="form-group">
+                                  <input name="nombre" type="text" class="form-control" id="exampleInputName" placeholder="Nombre" required>
+                                </div>
+                                <div class="form-group">
+                                  <input name="email" type="email" class="form-control" id="exampleInputEmail" placeholder="Email" required>
+                                </div>
+                                <div class="form-group">
+                                  <input name="motivo" type="text" class="form-control" id="exampleInputSubject" placeholder="Motivo" required>
+                                </div>
+                                <div class="form-group">
+                                  <textarea name="mensaje" class="form-control" rows="5"  placeholder="Su mensaje aquí" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-default btn-sm btn-1">ENVIAR</button>
+                              </form>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                    <!-- ===== End Rapid Contact form ===== -->
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <!-- ===== End Contact ===== -->
+          <li><a href="/pfrecuentes">Preguntas frecuentes</a></li>
+          <!-- ===== Search ===== -->
+          <!-- ===== End Search ===== -->
+
+          <li>
+            <%= sesion_paciente %>
+          </li>
+        </ul>
+      </div>
+      <!-- ===== End Navbar-collapse ===== -->
+    </div>
+  </nav>
+  <!-- ===== End Navbar ===== -->
+</header>
+
+<!-- ================================ -->
+<!-- ========== End Header ========== -->
+<!-- ================================ -->
+
+<%= yield :contenido %>
+
+<!-- ================================ -->
+<!-- ========== Begin Footer ========== -->
+<!-- ================================ -->
+<footer class="footer">
+  <div class="container xsx-width">
+    <div class="row">
+      <!-- ===== Begin About Us ===== -->
+      <div class="col-sm-4 col-md-4 elements_footer">
+        <div class="widget widget-about">
+          <!-- ===== Begin Title Footer ===== -->
+          <div class="titleF">
+            <h4>EMPRESA</h4>
+            <div class="right-linie">
+              <span></span>
+            </div>
+          </div>
+          <!-- ===== End Title Footer ===== -->
+
+          <p><%= como_llegar %></p>
+          <div class="row">
+            <div class="col-md-5">
+              <address>
+                <%= direccion %>
+              </address>
+            </div>
+            <div class="col-md-7">
+              <ul>
+                <li><%= telefono_fijo %></li>
+                <li><%= telefono_movil %></li>
+                <li><a href="mailto:medic@medicclin.com"><%= email %></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ===== End About Us ===== -->
+
+      <!-- ===== Begin Latest News ===== -->
+      <div class="col-sm-4 col-md-4 elements_footer">
+        <div class="widget widget-news">
+          <!-- ===== Begin Title Footer ===== -->
+          <div class="titleF">
+            <h4>ÚLTIMAS NOTICIAS</h4>
+            <div class="right-linie">
+              <span></span>
+            </div>
+          </div>
+          <!-- ===== End Title Footer ===== -->
+
+          <ul>
+            <%= ultimasnoticias %></ul>
+        </div>
+      </div>
+      <!-- ===== End Latest News ===== -->
+
+      <!-- ===== Begin Make an appointment ===== -->
+      <div class="col-sm-4 col-md-4 elements_footer">
+        <div class="widget widget-appointment">
+          <!-- ===== Begin Title Footer ===== -->
+          <div class="titleF">
+            <h4>MAKE AN APPOINTMENT</h4>
+            <div class="right-linie">
+              <span></span>
+            </div>
+          </div>
+          <!-- ===== End Title Footer ===== -->
+
+          <div class="row">
+            <div class="col-md-6">
+              <p>Puedes separar una cita por medio de una llamada telefónica o mediante el calendario que se encuentra en este sitio web, a la derecha se encuentran las opciones.</p>
+            </div>
+
+            <div class="col-md-6">
+              <ul>
+                <li>
+                  <div class="row">
+                    <div class="col-xs-2 iconFooter">
+                      <div class="iconF">
+                        <div class="iconF-1">
+                          <i class="fa fa-phone"></i>
+                        </div>
+                        <div class="iconF-2">
+                          <!-- ===== You can change the icon just below ===== -->
+                          <i class="fa fa-phone"></i>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-xs-10"><span>teléfono</span> <%= telefono_fijo %></div>
+                  </div>
+                </li>
+                <li>
+                  <div class="row">
+                    <div class="col-xs-2 iconFooter">
+                      <div class="iconF">
+                        <div class="iconF-1">
+                          <i class="fa fa-phone"></i>
+                        </div>
+                        <div class="iconF-2">
+                          <!-- ===== You can change the icon just below ===== -->
+                          <i class="fa fa-file-text"></i>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-xs-10"><span>o separa</span> <a href="/cita/">aquí</a></div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <!-- ===== End Make an appointment ===== -->
+
+      <!-- ===== Begin Copyright ===== -->
+      <div class="col-sm-12 col-md-12">
+        <div class="widget widget-copyright">
+          <ul>
+            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+            <li><a href="#"><i class=""></i></a></li>
+          </ul>
+          <p><span>Sitio Web desarrollado por</span> <a href="">Eduardo Aldaz</a></p>
+        </div>
+      </div>
+      <!-- ===== End Copyright ===== -->
+    </div>
+  </div>
+</footer>
+<!-- ================================ -->
+<!-- ========== End Footer ========== -->
+<!-- ================================ -->
+</main>
+
+<!-- ================================ -->
+<!-- ========== JS Global Compulsory ========== -->
+<!-- ================================ -->
+<%= javascript_include_tag "frontend/calendar/moment" %>
+<%= javascript_include_tag "frontend/jquery.min.js", "frontend/bootstrap.min" %>
+<!-- ================================ -->
+<!-- ========== JS Implementing Plugins ========== -->
+<!-- ================================ -->
+<!-- ========== MAP Plugins ========== -->
+
+<%= javascript_include_tag "frontend/app", "frontend/smooth-scroll", "frontend/revol-slider/jquery.themepunch.plugins.min", "frontend/revol-slider/jquery.themepunch.revolution.min" %>
+
+<%= javascript_include_tag "frontend/yt_player.min", "frontend/jquery.fitvids" %>
+
+<%= javascript_include_tag "frontend/jquery.royalslider.min", "frontend/jquery.beforeafter-1.4.min", "frontend/jquery-ui-1.8.13.custom.min" %>
+
+<%= javascript_include_tag "frontend/owl.carousel", "frontend/isotope.min", "frontend/circles",
+                           "frontend/select.min", "frontend/jquery.prettyphoto", "backend/bootstrap-modalmanager",
+                           "backend/bootstrap-modal" %>
+
+
+<!--[if lt IE 9]>
+<script src="frontend/assets/respond.js"></script>
+<![endif]-->
+<script type="text/javascript" src="http://arrow.scrolltotop.com/arrow89.js"></script>
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        $("#btnAcceder").click(function (){
+            window.location = "/login/"
+        });
+        $("#btnRegistro").click(function (){
+            window.location = "/registro/"
+        });
+
+        $("#btnLogout").click(function (){
+            window.location = "/logout/"
+        });
+    });
+</script>
+<%= yield :inscripts %>
+
+</body>
+</html>

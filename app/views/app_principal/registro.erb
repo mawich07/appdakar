@@ -1,0 +1,101 @@
+<% content_for :contenido do %>
+<div class="container xsx-width">
+  <!-- ================================ -->
+  <!-- ========== Begin Appointment ========== -->
+  <!-- ================================ -->
+  <div class="appointments">
+    <div class="container xsx-width">
+      <div class="row">
+        <!-- ===== Begin Contact Form ===== -->
+        <div class="col-md-8 appointment">
+          <!-- ===== Begin Title Content ===== -->
+          <div class="titleC">
+            <h4>REGISTRO DE USUARIO</h4>
+            <div class="right-linie">
+              <span></span>
+            </div>
+          </div>
+          <!-- ===== End Title Content ===== -->
+
+          <p>Curabitur lobortis turpis ac risus tempus, <a href="#">malesuada fringilla est feugiat</a>. Vivamus luctus purus eu nisi auctor molestie. Donec erat metus, aliquet at lacus aliquam, imperdiet aliquam arcu. Praesent pretium condimentum augue ut tincidunt. Sed ligula est, placerat vita</p>
+
+          <form action="/registro/" method="post" class="comment-form">
+            <ul class="comment-form-inputs">
+              <li>
+                <input id="author" name="paciente[nombres]" type="text" value="" aria-required="true" placeholder="Nombres*">
+              </li>
+              <li>
+                <input id="author1" name="paciente[apellidos]" type="text" value="" aria-required="true" placeholder="Apellidos*">
+              </li>
+              <li>
+                <input id="author2" name="paciente[cedula]" type="text" value="" aria-required="true" placeholder="Cédula*">
+              </li>
+              <li>
+                <input id="author3" name="paciente[telefono]" type="text" value="" aria-required="true" placeholder="Teléfono*">
+              </li>
+              <li>
+                <input id="url" name="paciente[email]" type="text" value="" placeholder="Email*">
+              </li>
+            <li>
+              <input id="birth1" name="paciente[password]" type="password" value="" aria-required="true" placeholder="Contraseña*">
+            </li>
+
+            </ul>
+<div class="row"></div>
+            <br/>
+            <p class="form-submit">
+              <input name="submit" type="submit" value="REGISTRARME">
+            </p>
+          </form>
+        </div>
+        <!-- ===== End Contact Form ===== -->
+
+        <!-- ===== Begin Contact Info ===== -->
+        <aside class="col-md-4 appointmentS">
+          <!-- ===== Begin Title Content ===== -->
+          <div class="titleC">
+            <h4>CONTACT INFO</h4>
+            <div class="right-linie">
+              <span></span>
+            </div>
+          </div>
+          <!-- ===== End Title Content ===== -->
+
+          <p>One of the most sublime experiences we can ever have is to wake up feeling healthy after we have been sick.</p>
+          <ul>
+            <li><i class="fa fa-map-marker"></i><span>Clinic Roma, Office 23, Hall B</span></li>
+            <li><i class="fa fa-phone"></i><span>+40 (845 45) 4525 45</span></li>
+            <li><i class="fa fa-hospital-o"></i><span>+40 (845 45) 4525 45</span></li>
+            <li><i class="fa fa-envelope"></i><a href="mailto:sesdaniel@gmail.com">sesdaniel@gmail.com</a></li>
+          </ul>
+          <div class="row">
+            <div class="col-md-6">
+              <address>
+                Medic Clinic<br>
+                33 Farlane Street<br>
+                Keilor East<br>
+                VIC 3033, Australia
+              </address>
+            </div>
+            <div class="col-md-6">
+              <ul>
+                <li>Phone: +123 655 655</li>
+                <li>Fax: +123 755 755</li>
+                <li>ABN: 32040030725</li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+        <!-- ===== End Contact Info ===== -->
+      </div>
+    </div>
+  </div>
+  <!-- ================================ -->
+  <!-- ========== End Appointment ========== -->
+  <!-- ================================ -->
+</div>
+<% end %>
+<% content_for :scripts do %>
+    <%= javascript_include_tag "frontend/select.min" %>
+<% end %>
+<%= render template: "layouts/usuariobase" %>

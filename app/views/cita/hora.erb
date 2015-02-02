@@ -1,0 +1,31 @@
+
+    <div class="modal-content">
+      <form action="/cita/nuevo/" method="post">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" style="margin-top:-10px;">&times;</button>
+        <h4>Nueva cita para el <%= @fecha %> a las <%= @nhora %></h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <div class="input-icon">
+                <i class="icon-credit-card"></i>
+                <input type="text" class="form-control" placeholder="Cédula del paciente" name="paciente" id="username2_input">
+                <input style="display: none" type="text" name="fecha" value="<%= @fecha %>">
+                <input style="display: none" type="text" name="hora" value="<%= @nhora %>">
+                <div id="error" style="display: none" class="alert alert-danger">
+                  <strong>Error!</strong> El paciente no está registrado. <a href="/paciente/nuevo/"> ¿Registrar?</a>
+                </div>              </div>
+            </div>
+          </div>
+          <div class="col-md-3"></div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button id="btnAceptar" type="submit" class="btn default blue disabled" > Aceptar</button>
+      </div>
+      </form>
+    </div>

@@ -1,0 +1,350 @@
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag "backend/select2", "backend/dataTables.bootstrap",
+                            "backend/bootstrap-switch.min", "backend/toastr.min",
+                            "backend/bootstrap-modal-bs3patch", "backend/bootstrap-modal",
+                            "backend/sweet-alert"%>
+    <style>
+        .acciones{
+            font-size: 16px !important;
+            cursor: pointer;
+        }
+        .eliminar{
+            color: #F3565D;
+        }
+
+        .revisar{
+            color: #45B6AF;
+        }
+
+        .nvisto{
+            background: rgba(255,181,107,.2);
+        }
+    </style>
+<% end %>
+
+<% content_for :contenido do %>
+    <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    <div class="portlet box blue-madison" style="border: 1px solid #ccc">
+
+      <div class="portlet-body">
+        <div class="table-toolbar">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="btn-group">
+
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="btn-group pull-right">
+                <button class="btn dropdown-toggle" data-toggle="dropdown">Acciones <i class="fa fa-angle-down"></i>
+                </button>
+                <ul class="dropdown-menu pull-right">
+                  <li>
+                    <a id="eliminar-sel" href="#">
+                      Eliminar seleccionados </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <form id="frm-tabla" action="/mensajes/eliminar/" method="post">
+        <table class="table table-bordered table-hover" id="sample_1">
+          <thead>
+          <tr>
+            <th class="table-checkbox">
+              <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes"/>
+            </th>
+            <th>
+              Email
+            </th>
+            <th>
+              Nombre
+            </th>
+            <th>
+              Motivo
+            </th>
+            <th>
+              Mensaje
+            </th>
+            <th>
+              Acciones
+            </th>
+
+          </tr>
+          </thead>
+          <tbody>
+          <% @mensajes.each do |m| %>
+
+              <tr class="<% if !m.estado %>nvisto<% end %> gradeX">
+                <td>
+                  <input type="checkbox" class="checkboxes" name="msj[]" value="<%= m.id %>"/>
+                </td>
+                <td>
+                  <%= m.email %>
+                </td>
+                <td>
+                  <span class="nombre"><%= m.nombre %></span>
+                </td>
+                <td>
+                  <%= m.motivo %>
+                </td>
+                <td>
+                  <%= m.mensaje.first(30) %>...
+                </td>
+                <td>
+                  &nbsp;
+                  <i data-id="<%= m.id %>" data-container="body" data-placement="top" data-original-title="Revisar" data-toggle="modal" class="demo acciones revisar fa fa-eye tooltips"></i>&nbsp;
+                  <i data-id="<%= m.id %>" data-container="body" data-placement="top" data-original-title="Eliminar" class="acciones eliminar fa fa-trash tooltips"></i>
+                </td>
+              </tr>
+
+          <% end %>
+
+          </tbody>
+        </table>
+        </form>
+      </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+
+    <form id="frmEliminarMensaje" action="/mensaje/eliminar" method="post" style="display: none">
+      <input type="text" id="idmensaje" name="idmensaje"/>
+    </form>
+
+    <div class="modal fade" id="ajax-modal" role="basic" aria-hidden="true">
+      <div class="page-loading page-loading-boxed">
+        <img src="../../assets/global/img/loading-spinner-grey.gif" alt="" class="loading">
+										<span>
+										&nbsp;&nbsp;Loading... </span>
+      </div>
+      <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+      </div>
+    </div>
+<% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/select2.min","backend/jquery.dataTables.min",
+                               "backend/dataTables.bootstrap", "backend/toastr.min",
+                               "backend/bootstrap-modalmanager", "backend/bootstrap-modal",
+                               "backend/sweet-alert.min" %>
+
+    <script type="text/javascript" charset="utf-8">
+        var TableManaged = function () {
+
+            var initTable1 = function () {
+
+                var table = $('#sample_1');
+
+                // begin first table
+                table.dataTable({
+
+                    // Internationalisation. For more info refer to http://datatables.net/manual/i18n
+                    "language": {
+                        "aria": {
+                            "sortAscending": ": activate to sort column ascending",
+                            "sortDescending": ": activate to sort column descending"
+                        },
+                        "emptyTable": "No data available in table",
+                        "info": "Mostrando del _START_ al _END_ de _TOTAL_ registros",
+                        "infoEmpty": "No entries found",
+                        "infoFiltered": "(filtered1 from _MAX_ total entries)",
+                        "lengthMenu": "Mostrar _MENU_ registros",
+                        "search": "Search:",
+                        "zeroRecords": "No matching records found"
+                    },
+
+                    // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
+                    // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js).
+                    // So when dropdowns used the scrollable div should be removed.
+                    //"dom": "<'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+
+                    "bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
+
+                    "columns": [ {
+                        "orderable": false
+                    },{
+                        "orderable": false
+                    }, {
+                        "orderable": true
+                    },{
+                        "orderable": true
+                    }, {
+                        "orderable": false
+                    }, {
+                        "orderable": false
+                    }],
+                    "lengthMenu": [
+                        [5, 15, 20, -1],
+                        [5, 15, 20, "Todo"] // change per page values here
+                    ],
+                    // set the initial value
+                    "pageLength": 5,
+                    "pagingType": "bootstrap_full_number",
+                    "language": {
+                        "search": "Filtro: ",
+                        "lengthMenu": "  _MENU_ registros",
+                        "info": "Mostrando del _START_ al _END_ de _TOTAL_ registros",
+                        "infoFiltered": "(filtrado de _MAX_ registros totales)",
+                        "zeroRecords": "No se encontraron registros",
+                        "paginate": {
+                            "previous":"Prev",
+                            "next": "Next",
+                            "last": "Last",
+                            "first": "First"
+                        }
+                    },
+                    "columnDefs": [{  // set default column settings
+                        'orderable': false,
+                        'targets': [0]
+                    }, {
+                        "searchable": false,
+                        "targets": [0]
+                    }],
+                    "order": [
+                        [1, "asc"]
+                    ] // set first column as a default sort by asc
+                });
+
+                var tableWrapper = jQuery('#sample_1_wrapper');
+
+                table.find('.group-checkable').change(function () {
+                    var set = jQuery(this).attr("data-set");
+                    var checked = jQuery(this).is(":checked");
+                    jQuery(set).each(function () {
+                        if (checked) {
+                            $(this).attr("checked", true);
+                            $(this).parents('tr').addClass("active");
+                        } else {
+                            $(this).attr("checked", false);
+                            $(this).parents('tr').removeClass("active");
+                        }
+                    });
+                    jQuery.uniform.update(set);
+                });
+
+                table.on('change', 'tbody tr .checkboxes', function () {
+                    $(this).parents('tr').toggleClass("active");
+                });
+
+                tableWrapper.find('.dataTables_length select').addClass("form-control input-xsmall input-inline"); // modify table per page dropdown
+            };
+            return {
+
+                //main function to initiate the module
+                init: function () {
+                    if (!jQuery().dataTable) {
+                        return;
+                    }
+
+                    initTable1();
+                }
+
+            };
+
+        }();
+        TableManaged.init();
+
+        $(function(){
+
+            $("#eliminar-sel").click(function(){
+                swal({
+                            title: "¿Eliminar?",
+                            text: "Los mensajes se borrarán permanentemente!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            cancelButtonText: "Cancelar",
+                            confirmButtonText: "Sí, eliminarlos!",
+                            closeOnConfirm: true
+                        },
+                        function(){
+
+                            $("#frm-tabla").submit();
+
+                        });
+
+            });
+
+            var criterio = "<%= @criterio %>";
+            $(".criterio").click(function(){
+                if ($(this).prop("name") == "ced"){
+                    criterio = "ced";
+                    $("#criterioBusq").html("Cédula <i class='fa fa-angle-down'></i>");
+                } else{
+                    criterio = "nom";
+                    $("#criterioBusq").html("Nombres <i class='fa fa-angle-down'></i>");
+                }
+            });
+
+            $("#txtBusq").keydown(function(e){
+                if(e.keyCode == 13) {
+                    window.location = "/paciente/listar/"+ $(this).val() +"/"+ criterio;
+                }
+            });
+
+            $("#btnBusq").click(function(e){
+                window.location = "/paciente/listar/"+ $("#txtBusq").val() +"/"+ criterio;
+            });
+
+            $(".eliminar").click(function(){
+                var id = $(this).attr("data-id");
+                swal({
+                            title: "¿Eliminar?",
+                            text: "El mensaje se borrará permanentemente!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            cancelButtonText: "Cancelar",
+                            confirmButtonText: "Sí, eliminarlo!",
+                            closeOnConfirm: true
+                        },
+                        function(){
+
+                            $("#idmensaje").val(id);
+                            $("#frmEliminarMensaje").submit();
+
+                        });
+            });
+
+
+            var $modal = $('#ajax-modal');
+
+            $('.demo').on('click', function(){
+                var fila = $(this).parent().parent();
+                var url = '/mensajes/revisar/?id='+$(this).attr("data-id");
+                $('body').modalmanager('loading');
+
+                setTimeout(function(){
+                    $modal.load(url, '', function(){
+                        fila.removeClass("nvisto");
+                        $modal.modal();
+                    });
+                }, 1000);
+            });
+
+            <% if @notifeliminar %>
+            toastr.options = {
+                "debug": false,
+                "positionClass": "toast-top-right",
+                "onclick": null,
+                "showDuration": "3000",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            toastr.success("Mensaje/s eliminado", "Transacción exitosa");
+            <% end %>
+
+
+        });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

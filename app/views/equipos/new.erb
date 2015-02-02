@@ -1,0 +1,67 @@
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag "backend/toastr.min" %>
+
+<% end %>
+
+<% content_for :contenido do %>
+    <div class="col-md-6">
+      <div class="space20">
+      </div>
+      <div class="portlet box blue" style="border: 1px solid #ccc">
+
+        <div class="portlet-body " style="padding: 30px">
+          <%= form_for @equipos, html: { multipart: true } do |f| %>
+
+              <div class="form-group">
+                <label for="">Imagen</label>
+                <%= f.file_field :imagenurl %>
+                <p class="help-block">
+                  Escoge una imagen del tratamiento.
+                </p>
+              </div>
+              <div class="form-group">
+                <label for="">Título</label>
+                <%= f.text_field :nombre, class: "form-control", placeholder: "Título", required: true %>
+              </div>
+              <div class="form-group">
+                <%= f.label :descripcion %>
+                <%= f.text_area :descripcion, class: "form-control", placeholder: "Descripción", required: true %>
+              </div>
+
+
+              <%= f.submit "Registrar", class: "btn btn-primary" %>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
+    </div>
+<% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/toastr.min" %>
+    <script>
+        $(function(){
+
+            toastr.options = {
+                "debug": false,
+                "positionClass": "toast-top-right",
+                "onclick": null,
+                "showDuration": "3000",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            <% if @notif %>
+            toastr.success("Administrador registrado", "Transacción exitosa");
+            <% end %>
+        });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

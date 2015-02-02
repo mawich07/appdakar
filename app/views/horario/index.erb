@@ -1,0 +1,334 @@
+
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag  "backend/toastr.min", "backend/sweet-alert",
+                             "backend/bootstrap-switch.min", "backend/clockface" %>
+    <style>
+
+        .acciones{
+            font-size: 16px !important;
+            cursor: pointer;
+        }
+
+        .eliminar{
+            color: #F3565D;
+        }
+
+        .editar{
+            color: #45B6AF;
+        }
+        #btnacciones{
+            background: #fff !important;
+        }
+
+            th{
+                text-align: center;
+            }
+    </style>
+<% end %>
+
+<% content_for :contenido do %>
+    <div class="col-md-6">
+
+      <div class="portlet light">
+        <div class="portlet-title">
+          <div class="caption font-green-sharp">
+            <i class="icon-calendar  font-green-sharp"></i>
+            <span class="caption-subject"> Horarios</span>
+          </div>
+        </div>
+        <div class="portlet-body">
+
+          <ul class="list-group">
+            <% @horarios.each do |p| %>
+                <li class="list-group-item">
+                  <strong><span class="txtNombre"><%= p.dias %>:</span> </strong><%= p.rango_horas %> <span id="btnacciones" class="badge badge-default">
+                        <i data-id="<%= p.id  %>" data-container="body" data-placement="top" data-original-title="Eliminar" class="acciones eliminar fa fa-trash tooltips"></i>
+                            </span>
+                </li>
+            <% end %>
+          </ul>
+
+        </div>
+      </div>
+
+    </div>
+
+    <form id="frmEliminarCiudad" action="/horario/eliminar" method="post" style="display: none">
+      <input type="text" id="eliCiudadId" name="id"/>
+    </form>
+
+    <div class="col-md-6">
+      <div class="portlet light">
+        <div class="portlet-title">
+          <div class="caption font-green-sharp">
+            <i class="icon-plus  font-green-sharp"></i>
+            <span class="caption-subject"> Nuevo</span>
+          </div>
+
+        </div>
+        <div class="portlet-body" style="padding: 0">
+
+          <form id="frmHorario" role="form" method="post" action="/horario/nuevo/">
+            <div id="">
+              <div id="cont-ciudad">
+                <div class="form-body">
+                  <div class="form-group">
+                    <div class="col-md-12" style="padding-left: 0">
+                    <table>
+                      <thead>
+                      <tr><th>Lu</th>
+                        <th>Ma</th>
+                        <th>Mi</th>
+                        <th>Ju</th>
+                        <th>Vi</th>
+                        <th>Sá</th>
+                        <th>Do</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><input id="lu" type="checkbox"></td>
+                          <td><input id="ma" type="checkbox"></td>
+                          <td><input id="mi" type="checkbox"></td>
+                          <td><input id="ju" type="checkbox"></td>
+                          <td><input id="vi" type="checkbox"></td>
+                          <td><input id="sa" type="checkbox"></td>
+                          <td><input id="do" type="checkbox"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    </div>
+                    <div class="col-md-12" style="margin-top: 10px; padding-left: 0">
+                        <div class="col-md-4" style="padding-left: 0">
+                          <input name="desde" id="hora1" type="text" placeholder="Desde" value="" data-format="hh:mm A" class="form-control input-sm clockface_1"/>
+                        </div>
+                        <div class="col-md-4" style="padding-left: 0">
+                          <input name="hasta" id="hora2" type="text" placeholder="Hasta" value="" data-format="hh:mm A" class="form-control input-sm clockface_1"/>
+                        </div>
+                      <div class="col-md-2" style="padding-left: 0">
+                          <input id="minutos" data-original-title="Duración de cada cita en minutos" data-placement="top" data-container="body" type="text" placeholder="Duración (min)" value="" data-format="hh:mm A" class="form-control input-sm tooltips"/>
+                        </div>
+                      <div class="col-md-2" style="padding-left: 0">
+                          <span id="turnos"></span>
+                        </div>
+                      <input type="text" style="display: none" id="txt_dias" name="dias"/>
+                      <input type="text" style="display: none" id="txt_turnos" name="turnos"/>
+                    </div>
+                  </div>
+                </div>
+                <hr/>
+              </div>
+            </div>
+            <br/>
+            <button id="btnGuardar" class="btn btn-circle blue-madison" style="margin-top: 15px">
+              <i class="fa fa-check"></i> Guardar </button>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+
+    </div>
+
+    <div class="modal fade" id="editar" tabindex="-1" role="basic" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h4 class="modal-title">Editar ciudad</h4>
+          </div>
+          <form role="form" method="post" action="/ciudad/editar/">
+            <div class="modal-body">
+
+
+              <div class="form-body">
+                <div class="form-group">
+                  <label>Nombre</label>
+                  <input id="ciudad" name="ciudad" class="form-control" placeholder="Nombre" type="text">
+                </div>
+              </div>
+
+              <input type="text" name="idciudad" id="idciudad" style="display: none"/>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn default" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn blue">Guardar cambios</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+<% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/toastr.min", "backend/sweet-alert.min",
+    "backend/clockface"%>
+
+    <script type="text/javascript" charset="utf-8">
+        $(function(){
+            $('.clockface_1').clockface();
+
+            $("#minutos").focusout(function(){
+
+            });
+
+            $("#btnGuardar").click(function(e){
+                e.preventDefault();
+                var dias = "";
+                if($("#lu").attr("checked")){
+                    dias += "Lun-"
+                }
+                if($("#ma").attr("checked")){
+                    dias += "Mar-"
+                }
+                if($("#mi").attr("checked")){
+                    dias += "Mie-"
+                }
+                if($("#ju").attr("checked")){
+                    dias += "Jue-"
+                }
+                if($("#vi").attr("checked")){
+                    dias += "Vie-"
+                }
+                if($("#sa").attr("checked")){
+                    dias += "Sáb-"
+                }
+                if($("#do").attr("checked")){
+                    dias += "Dom-"
+                }
+
+                dias = dias.substr(0,dias.length-1);
+
+                var a = null, turnos = null;
+                if($("#minutos").val() != ""){
+                    var h1 = $("#hora1").clockface("getTime", true);
+                    var h2 = $("#hora2").clockface("getTime", true);
+                    var huno = 0, hdos = 0;
+                    if(h1.ampm == "pm"){
+                        switch (h1.hour){
+                            case 1: huno = 13; break;
+                            case 2: huno = 14; break;
+                            case 3: huno = 15; break;
+                            case 4: huno = 16; break;
+                            case 5: huno = 17; break;
+                            case 6: huno = 18; break;
+                            case 7: huno = 19; break;
+                            case 8: huno = 20; break;
+                            case 9: huno = 21; break;
+                            case 10: huno = 22; break;
+                            case 11: huno = 23; break;
+                        }
+                    }
+                    if(h2.ampm == "pm"){
+                        switch (h2.hour){
+                            case 1: hdos = 13; break;
+                            case 2: hdos = 14; break;
+                            case 3: hdos = 15; break;
+                            case 4: hdos = 16; break;
+                            case 5: hdos = 17; break;
+                            case 6: hdos = 18; break;
+                            case 7: hdos = 19; break;
+                            case 8: hdos = 20; break;
+                            case 9: hdos = 21; break;
+                            case 10: hdos = 22; break;
+                            case 11: hdos = 23; break;
+                        }
+                    }
+                    var fecha1 = new Date(2014,12,11,huno,h1.minute,0);
+                    var fecha2 = new Date(2014,12,11,hdos,h2.minute,0);
+                    var nfecha = new Date(2014,12,11,huno,h1.minute,0);
+                    a = fecha1.getHours() + ":" + fecha1.getMinutes() + ",";
+                    var b = [];
+                    while(nfecha < fecha2){
+                        nfecha = new Date(nfecha.getTime() + 30*60000);
+                        b.push(nfecha.getHours() + ":" + nfecha.getMinutes());
+                        //a += nfecha.getHours() + ":" + nfecha.getMinutes() + ",";
+                    }
+
+                    for(var i =0; i< b.length-1;i++)
+                    {
+                        a += b[i] + ",";
+                    }
+                    a = a.substr(0, a.length-1);
+                    turnos = ((Math.abs(fecha1 - fecha2) / 1000) / 60)/parseInt($("#minutos").val());
+                }
+
+                $("#txt_dias").val(dias);
+                $("#txt_turnos").val(a);
+
+                swal({
+                            title: "¿Continuar?",
+                            text: "Se crearán " + turnos + " turnos para los días "+ dias +":\n" + a,
+                            type: "info",
+                            showCancelButton: true,
+                            confirmButtonColor: "#66C469",
+                            cancelButtonText: "Cancelar",
+                            confirmButtonText: "Sí, continuar",
+                            closeOnConfirm: true
+                        },
+                        function(){
+
+                            $("#frmHorario").submit();
+
+                        });
+            });
+
+
+            toastr.options = {
+                "debug": false,
+                "positionClass": "toast-top-right",
+                "onclick": null,
+                "showDuration": "3000",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            $(".eliminar").click(function(){
+                var id = $(this).attr("data-id");
+                swal({
+                            title: "¿Eliminar?",
+                            text: $(this).parent().parent().find(".txtNombre").html() + " se borrará permanentemente!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            cancelButtonText: "Cancelar",
+                            confirmButtonText: "Sí, eliminarla!",
+                            closeOnConfirm: true
+                        },
+                        function(){
+
+                            $("#eliCiudadId").val(id);
+                            $("#frmEliminarCiudad").submit();
+
+                        });
+            });
+
+            $(".editar").click(function(){
+                var preg = $(this).parent().parent().find(".txtNombre").html();
+                $("#ciudad").val(preg);
+                $("#idciudad").val($(this).attr("data-id"));
+            });
+
+            <% if @notifeditar %>
+            toastr.success("Ciudad actualizada", "Transacción exitosa");
+            <% end %>
+            <% if @notifnuevo %>
+            toastr.success("Ciudad registrada", "Transacción exitosa");
+            <% end %>
+            <% if @notifeliminar %>
+            toastr.success("Ciudad eliminada", "Transacción exitosa");
+            <% end %>
+
+
+
+        });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

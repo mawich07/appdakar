@@ -1,0 +1,199 @@
+
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag  "backend/toastr.min", "backend/sweet-alert" %>
+    <style>
+
+        .acciones{
+            font-size: 16px !important;
+            cursor: pointer;
+        }
+
+        .eliminar{
+            color: #F3565D;
+        }
+
+        .editar{
+            color: #45B6AF;
+        }
+        #btnacciones{
+            background: #fff !important;
+        }
+    </style>
+<% end %>
+
+<% content_for :contenido do %>
+    <div class="col-md-6">
+
+      <div class="portlet light">
+        <div class="portlet-title">
+          <div class="caption font-green-sharp">
+            <i class="icon-globe-alt  font-green-sharp"></i>
+            <span class="caption-subject"> Ciudades</span>
+          </div>
+        </div>
+        <div class="portlet-body">
+
+          <ul class="list-group">
+            <% @ciudades.each do |p| %>
+
+
+                <li class="list-group-item">
+                  <span class="txtNombre"><%= p.nombre %></span> <span id="btnacciones" class="badge badge-default">
+										<i data-target="#editar" data-id="<%= p.id  %>" data-toggle="modal" data-container="body" data-placement="top" data-original-title="Editar" class="acciones editar fa fa-pencil tooltips"></i>&nbsp;
+                        <i data-id="<%= p.id  %>" data-container="body" data-placement="top" data-original-title="Eliminar" class="acciones eliminar fa fa-trash tooltips"></i>
+                            </span>
+                </li>
+
+
+
+            <% end %>
+          </ul>
+
+        </div>
+      </div>
+
+    </div>
+
+    <form id="frmEliminarCiudad" action="/ciudad/eliminar" method="post" style="display: none">
+      <input type="text" id="eliCiudadId" name="idciudad"/>
+    </form>
+
+    <div class="col-md-6">
+      <div class="portlet light">
+        <div class="portlet-title">
+          <div class="caption font-green-sharp">
+            <i class="icon-plus  font-green-sharp"></i>
+            <span class="caption-subject"> Nuevo</span>
+          </div>
+          <div class="actions">
+            <a id="nueva-fila" href="#" class="btn btn-circle green-jungle ">
+              <i class="fa fa-plus"></i> </a>
+          </div>
+        </div>
+        <div class="portlet-body">
+
+          <form role="form" method="post" action="/ciudad/nuevo/">
+            <div id="formNuevaCiudad">
+              <div id="cont-ciudad">
+                <div class="form-body">
+                  <div class="form-group">
+                    <input name="ciudad[]" class="form-control" placeholder="Nombre de la ciudad" type="text" required>
+                  </div>
+                </div>
+                <hr/>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-circle blue-madison">
+              <i class="fa fa-check"></i> Guardar </button>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+
+    </div>
+
+    <div class="modal fade" id="editar" tabindex="-1" role="basic" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h4 class="modal-title">Editar ciudad</h4>
+          </div>
+          <form role="form" method="post" action="/ciudad/editar/">
+            <div class="modal-body">
+
+
+              <div class="form-body">
+                <div class="form-group">
+                  <label>Nombre</label>
+                  <input id="ciudad" name="ciudad" class="form-control" placeholder="Nombre" type="text">
+                </div>
+              </div>
+
+              <input type="text" name="idciudad" id="idciudad" style="display: none"/>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn default" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn blue">Guardar cambios</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      </div>
+      <!-- /.modal-dialog -->
+<% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/toastr.min", "backend/sweet-alert.min" %>
+
+    <script type="text/javascript" charset="utf-8">
+        $(function(){
+            toastr.options = {
+                "debug": false,
+                "positionClass": "toast-top-right",
+                "onclick": null,
+                "showDuration": "5000",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            $(".eliminar").click(function(){
+                var id = $(this).attr("data-id");
+                swal({
+                            title: "¿Eliminar?",
+                            text: $(this).parent().parent().find(".txtNombre").html() + " se borrará permanentemente!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            cancelButtonText: "Cancelar",
+                            confirmButtonText: "Sí, eliminarla!",
+                            closeOnConfirm: true
+                        },
+                        function(){
+
+                            $("#eliCiudadId").val(id);
+                            $("#frmEliminarCiudad").submit();
+
+                        });
+            });
+
+            $(".editar").click(function(){
+                var preg = $(this).parent().parent().find(".txtNombre").html();
+                $("#ciudad").val(preg);
+                $("#idciudad").val($(this).attr("data-id"));
+            });
+
+
+            $("#nueva-fila").click(function(){
+                var a = $("#cont-ciudad").clone();
+                a.attr("id","");
+                a.find(".form-control").val("");
+                a.appendTo("#formNuevaCiudad");
+            });
+
+
+            <% if @notifeditar %>
+            toastr.success("Ciudad actualizada", "Transacción exitosa");
+            <% end %>
+            <% if @notifnuevo %>
+            toastr.success("Ciudad registrada", "Transacción exitosa");
+            <% end %>
+            <% if @notifeliminar %>
+            toastr.success("Ciudad eliminada", "Transacción exitosa");
+            <% end %>
+
+
+
+        });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

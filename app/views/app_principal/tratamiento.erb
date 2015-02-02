@@ -1,0 +1,75 @@
+<% content_for :contenido do %>
+
+    <!-- ================================ -->
+    <!-- == Begin Latest News Carousel == -->
+    <!-- ================================ -->
+
+    <div class="latest_news_carousel">
+      <div class="heading_e">
+        <h3>Nuestros Tratamientos</h3>
+        <p>breve descripcion de quiwrueporweo</p>
+        <h4><img src="/assets/frontend/assets/heading.png" alt="heading"></h4>
+      </div>
+      <div class="container xsx-width">
+        <div class="row">
+          <!-- ===== Begin Title Latest ===== -->
+          <div class="titleL col-md-12">
+            <h4>Tratamientos</h4>
+            <div class="right-linie">
+              <span></span>
+            </div>
+          </div>
+          <!-- ===== End Title Latest ===== -->
+
+          <!-- ================================ -->
+          <!-- ========== Begin Elements ========== -->
+          <!-- ================================ -->
+          <div class="col-md-12">
+            <div class="row">
+              <div id="owl-latest_news_1" class="owl-carousel owl-theme">
+                <% @tratamientos.each do |e| %>
+                    <div class="item">
+                      <div class="latest_news_elements">
+                        <div class="thumbnail thumbnail_latest_news">
+                          <img src="<%= e.imagenurl_url %>" alt="latest_news-2">
+                          <div class="mask">
+                            <ul>
+                              <li><a href="<%= e.imagenurl_url %>" data-gal="prettyPhoto[gallery]"><i class="fa fa-search"></i></a></li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="caption_latest_news">
+                          <h4><a href="#"><%= e.nombre %></a></h4>
+                          <p><%= e.descripcion %></p>
+
+                        </div>
+                      </div>
+                    </div>
+                <% end %>
+
+              </div>
+            </div>
+          </div>
+          <!-- ================================ -->
+          <!-- ========= End Elements ========= -->
+          <!-- ================================ -->
+        </div>
+      </div>
+    </div>
+    <!-- ================================ -->
+    <!-- === End Latest News Carousel === -->
+    <!-- ================================ -->
+
+<% end %>
+
+<% content_for :inscripts do %>
+    <!-- ========== jQuery REVOLUTION Slider Plugins ========== -->
+
+
+
+    <!-- ========== Royal Slider Plugins ========== -->
+
+
+<% end %>
+
+<%= render template: "layouts/usuariobase" %>

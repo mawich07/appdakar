@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<!--
+Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.2.0
+Version: 3.3.1
+Author: KeenThemes
+Website: http://www.keenthemes.com/
+Contact: support@keenthemes.com
+Follow: www.twitter.com/keenthemes
+Like: www.facebook.com/keenthemes
+Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
+License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
+-->
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+  <meta charset="utf-8"/>
+  <title>Admin Login</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <meta content="" name="description"/>
+  <meta content="" name="author"/>
+  <!-- BEGIN GLOBAL MANDATORY STYLES -->
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css">
+  <%= stylesheet_link_tag "backend/simple-line-icons/simple-line-icons.min",
+                          "backend/bootstrap.min", "backend/uniform.default",
+                          "backend/bootstrap-switch.min", "backend/login",
+                          "backend/components", "backend/plugins", "backend/layout",
+                          "backend/default", "backend/custom"%>
+
+  <link rel="shortcut icon" href="favicon.ico"/>
+</head>
+<!-- BEGIN BODY -->
+<!-- DOC: Apply "page-header-fixed-mobile" and "page-footer-fixed-mobile" class to body element to force fixed header or footer in mobile devices -->
+<!-- DOC: Apply "page-sidebar-closed" class to the body and "page-sidebar-menu-closed" class to the sidebar menu element to hide the sidebar by default -->
+<!-- DOC: Apply "page-sidebar-hide" class to the body to make the sidebar completely hidden on toggle -->
+<!-- DOC: Apply "page-sidebar-closed-hide-logo" class to the body element to make the logo hidden on sidebar toggle -->
+<!-- DOC: Apply "page-sidebar-hide" class to body element to completely hide the sidebar on sidebar toggle -->
+<!-- DOC: Apply "page-sidebar-fixed" class to have fixed sidebar -->
+<!-- DOC: Apply "page-footer-fixed" class to the body element to have fixed footer -->
+<!-- DOC: Apply "page-sidebar-reversed" class to put the sidebar on the right side -->
+<!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
+<body class="login">
+<!-- BEGIN LOGO -->
+<div class="logo">
+  <a href="index.html">
+    <img src="../../assets/admin/layout2/img/logo-big.png" alt=""/>
+  </a>
+</div>
+<!-- END LOGO -->
+<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+<div class="menu-toggler sidebar-toggler">
+</div>
+<!-- END SIDEBAR TOGGLER BUTTON -->
+<!-- BEGIN LOGIN -->
+<div class="content">
+  <!-- BEGIN LOGIN FORM -->
+  <form class="login-form" action="/reestablecerpass/<%= @idusr %>/<%= @token %>/" method="post">
+    <h3 class="form-title">Reestablecer contraseña</h3>
+    <div class="alert alert-danger display-hide">
+      <button class="close" data-close="alert"></button>
+			<span>
+			Rellena los campos. </span>
+    </div>
+    <div class="form-group">
+      <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+      <label class="control-label visible-ie8 visible-ie9">Contraseña nueva</label>
+      <div class="input-icon">
+        <i class="icon-lock"></i>
+        <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Contraseña nueva" name="passnueva" autofocus/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label visible-ie8 visible-ie9">Repetir contraseña nueva</label>
+      <div class="input-icon">
+        <i class="icon-lock"></i>
+        <input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="Repetir contraseña nueva" name="password"/>
+      </div>
+    </div>
+    <div class="form-actions">
+      <label class="checkbox">
+      </label>
+      <button type="submit" class="btn green pull-right">
+        Enviar <i class="icon-arrow-right m-icon-white"></i>
+      </button>
+    </div>
+
+  </form>
+  <!-- END LOGIN FORM -->
+
+</div>
+<!-- END LOGIN -->
+<!-- BEGIN COPYRIGHT -->
+<div class="copyright">
+  2014 &copy; Nombre de la clinica.
+</div>
+<!-- END COPYRIGHT -->
+<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+<!-- BEGIN CORE PLUGINS -->
+<!--[if lt IE 9]>
+<script src="../../assets/global/plugins/respond.min.js"></script>
+<script src="../../assets/global/plugins/excanvas.min.js"></script>
+<![endif]-->
+
+<%= javascript_include_tag "backend/jquery.min", "backend/jquery-migrate.min", "backend/jquery-ui-1.10.3.custom.min",
+                           "backend/bootstrap.min", "backend/bootstrap-hover-dropdown.min", "backend/jquery.slimscroll.min", "backend/jquery.blockui.min",
+                           "backend/jquery.cokie.min", "backend/jquery.uniform.min", "backend/bootstrap-switch.min",
+                           "backend/jquery.validate.min", "backend/metronic", "backend/layout", "backend/demo", "backend/login"
+%>
+
+<script>
+    jQuery(document).ready(function() {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        Demo.init(); // init demo features
+        Login.init();
+
+        $("#enviar").click(function (){
+            var email = $("#email").val();
+            $.post( "/recuperarpass/"+email)
+                    .done(function( data ) {
+                        if (data.estado == "1" ){
+                            $("#error").slideUp();
+                            $("#correcto").slideDown();
+                        }
+                        else{
+                            $("#error").slideDown();
+                            $("#correcto").slideUp();
+                        }
+                    });
+        });
+
+    });
+</script>
+<!-- END JAVASCRIPTS -->
+</body>
+<!-- END BODY -->
+</html>

@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<!--
+Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.2.0
+Version: 3.3.1
+Author: KeenThemes
+Website: http://www.keenthemes.com/
+Contact: support@keenthemes.com
+Follow: www.twitter.com/keenthemes
+Like: www.facebook.com/keenthemes
+Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
+License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
+-->
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+  <meta charset="utf-8"/>
+  <title>Clinica | Administrador</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <meta content="" name="description"/>
+  <meta content="" name="author"/>
+  <link href='http://fonts.googleapis.com/css?family=Quicksand' rel='stylesheet' type='text/css'>
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css">
+
+  <%= stylesheet_link_tag "backend/font-awesome/css/font-awesome.min", "backend/simple-line-icons/simple-line-icons.min",
+                          "backend/bootstrap.min", "backend/uniform.default", "backend/bootstrap-switch.min"
+  %>
+  <%= yield :estilos %>
+
+  <%= stylesheet_link_tag "backend/components",
+                          "backend/plugins", "backend/layout", "backend/grey", "backend/custom"
+  %>
+  <% if verif_notificacion %>
+      <%= stylesheet_link_tag "backend/jquery.notific8.min", "backend/toastr.min" %>
+      <style>
+        .jquery-notific8-heading{
+            font-weight: 300;
+        }
+        .link-notif{
+            color: #fff;
+            font-weight: bold;
+        }
+        .link-notif:hover{
+            color: #fff;
+        }
+      </style>
+  <% end %>
+
+
+  <link rel="shortcut icon" href="favicon.ico"/>
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<!-- DOC: Apply "page-header-fixed-mobile" and "page-footer-fixed-mobile" class to body element to force fixed header or footer in mobile devices -->
+<!-- DOC: Apply "page-sidebar-closed" class to the body and "page-sidebar-menu-closed" class to the sidebar menu element to hide the sidebar by default -->
+<!-- DOC: Apply "page-sidebar-hide" class to the body to make the sidebar completely hidden on toggle -->
+<!-- DOC: Apply "page-sidebar-closed-hide-logo" class to the body element to make the logo hidden on sidebar toggle -->
+<!-- DOC: Apply "page-sidebar-hide" class to body element to completely hide the sidebar on sidebar toggle -->
+<!-- DOC: Apply "page-sidebar-fixed" class to have fixed sidebar -->
+<!-- DOC: Apply "page-footer-fixed" class to the body element to have fixed footer -->
+<!-- DOC: Apply "page-sidebar-reversed" class to put the sidebar on the right side -->
+<!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
+<body class="page-container-bg-solid page-sidebar-closed-hide-logo page-header-fixed page-sidebar-fixed">
+<!-- BEGIN HEADER -->
+<div id="lienzo">
+<div class="page-header navbar navbar-fixed-top">
+<!-- BEGIN HEADER INNER -->
+<div class="page-header-inner">
+<!-- BEGIN LOGO -->
+<div class="page-logo">
+  <a href="/admin/">
+    <div class="logo-default" style="color: #fff; margin-top: 20px; font-size: 1.4em; font-family: 'Quicksand', sans-serif;">DAKAR ADMIN</div>
+  </a>
+
+  <div class="menu-toggler sidebar-toggler">
+    <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
+  </div>
+</div>
+<!-- END LOGO -->
+<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+<a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+</a>
+<!-- END RESPONSIVE MENU TOGGLER -->
+<!-- BEGIN PAGE ACTIONS -->
+<!-- DOC: Remove "hide" class to enable the page header actions -->
+<div class="page-actions">
+  <h3 class="page-title">
+    <%= @titulo %>
+  </h3>
+</div>
+<!-- END PAGE ACTIONS -->
+<!-- BEGIN PAGE TOP -->
+<div class="page-top">
+  <% if @btnBarra then %>
+
+      <div class="btn-group">
+        <a class="btn btn-circle green-jungle" style="margin-top: 15px; margin-left: 10px" href="/paciente/nuevo/">
+          &nbsp;<span class="hidden-sm hidden-xs">Nuevo&nbsp;</span>&nbsp;<i class="fa fa-plus"></i>
+        </a>
+      </div>
+  <% end %>
+
+  <% if @btnBarraPFrecuentes then %>
+      <div class="btn-group">
+        <a class="btn btn-circle green-jungle" style="margin-top: 15px; margin-left: 10px" href="/pfrecuente/nuevo/">
+          &nbsp;<span class="hidden-sm hidden-xs">Nuevo&nbsp;</span>&nbsp;<i class="fa fa-plus"></i>
+        </a>
+      </div>
+  <% end %>
+
+  <% if @btnBarraAdmin then %>
+      <div class="btn-group">
+        <a class="btn btn-circle green-jungle" style="margin-top: 15px; margin-left: 10px" href="/administradors/new/">
+          &nbsp;<span class="hidden-sm hidden-xs">Nuevo&nbsp;</span>&nbsp;<i class="fa fa-plus"></i>
+        </a>
+      </div>
+  <% end %>
+
+  <% if @btnBarraEquipo then %>
+      <div class="btn-group">
+        <a class="btn btn-circle green-jungle" style="margin-top: 15px; margin-left: 10px" href="/equipos/new/">
+          &nbsp;<span class="hidden-sm hidden-xs">Nuevo&nbsp;</span>&nbsp;<i class="fa fa-plus"></i>
+        </a>
+      </div>
+  <% end %>
+
+  <% if @btnBarraNoticia then %>
+      <div class="btn-group">
+        <a class="btn btn-circle green-jungle" style="margin-top: 15px; margin-left: 10px" href="/noticia/nuevo/">
+          &nbsp;<span class="hidden-sm hidden-xs">Nuevo&nbsp;</span>&nbsp;<i class="fa fa-plus"></i>
+        </a>
+      </div>
+  <% end %>
+
+  <div class="top-menu">
+    <ul class="nav navbar-nav pull-right">
+
+    <!-- BEGIN NOTIFICATION DROPDOWN -->
+    <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+      <a href="#" class="dropdown-toggle btn-notif" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+        <i class="icon-bell"></i>
+        <% if alerta_notif_cont != 0 then %>
+        <span id="notificacion" class="badge badge-danger">
+                          <%= alerta_notif_cont %>
+						</span>
+        <% else %>
+        <span id="notificacion">
+						</span>
+        <% end %>
+
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <p>
+            Notificaciones nuevas
+          </p>
+        </li>
+        <li>
+          <ul id="contenedor_notif" class="dropdown-menu-list scroller" style="height: 250px;">
+            <%= alerta_notif %>
+
+          </ul>
+        </li>
+        <li class="external">
+          <a href="#">
+            Ver todo  <i class="icon-arrow-right"></i>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <!-- END NOTIFICATION DROPDOWN -->
+
+
+      <!-- BEGIN INBOX DROPDOWN -->
+      <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
+        <a href="#" class="dropdown-toggle btn-mensajes" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+          <i class="icon-envelope-open"></i>
+          <% if alerta_mens_cont != 0 then %>
+        <span id="mensajes" class="badge badge-danger">
+                          <%= alerta_mens_cont %>
+						</span>
+          <% else %>
+        <span id="mensajes">
+						</span>
+          <% end %>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <p>
+             Mensajes nuevos
+            </p>
+          </li>
+          <li>
+            <ul id="contenedor_msj" class="dropdown-menu-list scroller" style="height: 250px;">
+                <%= alerta_mensaje %>
+
+            </ul>
+          </li>
+          <li class="external">
+            <a href="/mensajes/gestionar/">
+              Ver todo <i class="icon-arrow-right"></i>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- END INBOX DROPDOWN -->
+
+      <!-- BEGIN INBOX DROPDOWN -->
+      <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
+        <a href="#" class="dropdown-toggle btn-citas" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+          <i class="icon-calendar"></i>
+          <% if alerta_citas_cont != 0 then %>
+        <span id="citas" class="badge badge-danger">
+                          <%= alerta_citas_cont %>
+						</span>
+          <% else %>
+        <span id="citas">
+						</span>
+          <% end %>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <p>
+              Citas nuevas
+            </p>
+          </li>
+          <li>
+            <ul id="contenedor_citas" class="dropdown-menu-list scroller" style="height: 250px;">
+              <%= alerta_cita %>
+
+            </ul>
+          </li>
+          <li class="external">
+            <a href="/citas/gestionar/">
+              Ver todo <i class="icon-arrow-right"></i>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- END INBOX DROPDOWN -->
+
+
+      <!-- BEGIN QUICK SIDEBAR TOGGLER -->
+      <li class="dropdown dropdown-quick-sidebar-toggler hide">
+        <a href="javascript:;" class="dropdown-toggle">
+          <i class="icon-logout"></i>
+        </a>
+      </li>
+      <!-- END QUICK SIDEBAR TOGGLER -->
+      <!-- BEGIN USER LOGIN DROPDOWN -->
+      <li class="dropdown dropdown-user">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+          <img alt="" class="img-circle hide1" src="<%= usuario_avatar_url %>">
+						<span class="username username-hide-on-mobile">
+						<%= nombre_usuario %> </span>
+          <i class="fa fa-angle-down"></i>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a href="/administrador/perfil/">
+              <i class="icon-user"></i> Perfil </a>
+          </li>
+          <li class="divider">
+          </li>
+          <li>
+            <a href="/admin/logout/">
+              <i class="icon-key"></i> Salir </a>
+          </li>
+        </ul>
+      </li>
+      <!-- END USER LOGIN DROPDOWN -->
+    </ul>
+  </div>
+  <!-- END TOP NAVIGATION MENU -->
+</div>
+<!-- END PAGE TOP -->
+</div>
+<!-- END HEADER INNER -->
+</div>
+<!-- END HEADER -->
+<div class="clearfix">
+</div>
+<div class="page-container">
+<!-- BEGIN SIDEBAR -->
+<div class="page-sidebar-wrapper">
+  <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+  <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+  <div class="page-sidebar navbar-collapse collapse">
+    <!-- BEGIN SIDEBAR MENU -->
+    <div style="position: relative; overflow: hidden; width: auto; height: 355px;" class="slimScrollDiv">
+      <ul data-initialized="1" style="overflow: hidden; width: auto; height: 355px;" data-height="355" class="page-sidebar-menu page-sidebar-menu-compact" data-auto-scroll="true" data-slide-speed="200">
+        <li class="start <%= @panel_activo %>">
+          <a href="/admin">
+            <i class="icon-speedometer"></i>
+            <span class="title">Panel de control</span>
+            <% if @panel_activo %>
+                <span class="selected"></span>
+            <% end %>
+          </a>
+        </li>
+
+        <li class="<%= @citas_activo %>">
+          <a href="/citas/gestionar">
+            <i class="icon-calendar"></i>
+            <span class="title">Citas</span>
+            <% if @citas_activo %>
+                <span class="selected"></span>
+            <% end %>
+
+          </a>
+        </li>
+
+        <li class="<%= @paciente_activo %>">
+          <a href="javascript:;">
+            <i class="icon-users"></i>
+            <span class="title">Pacientes</span>
+            <% if @paciente_activo %>
+                <span class="selected"></span>
+                <span class="arrow open"></span>
+            <% else %>
+                <span class="arrow "></span>
+            <% end %>
+          </a>
+          <ul class="sub-menu">
+
+            <li class="<%= @pac_n_activo %>">
+              <a href="/paciente/nuevo">
+                <i class="icon-plus"></i>
+                Nuevo</a>
+            </li>
+            <li class="<%= @pac_listar_activo %>">
+              <a href="/paciente/listar/">
+                <i class="icon-magnifier"></i>
+                Revisar</a>
+            </li>
+            <li class="<%= @pac_reporte_activo %>">
+              <a href="/pacientes/reporte/">
+                <i class="icon-bar-chart"></i>
+                Reporte estadístico</a>
+            </li>
+          </ul>
+        </li>
+        <% if usuario_es_super then %>
+        <li class="<%= @admin_activo %>">
+          <a href="javascript:;">
+            <i class="icon-star"></i>
+            <span class="title">Administradores</span>
+            <% if @admin_activo %>
+                <span class="selected"></span>
+                <span class="arrow open"></span>
+            <% else %>
+                <span class="arrow "></span>
+            <% end %>
+          </a>
+          <ul class="sub-menu">
+
+            <li class="<%= @admin_n_activo %>">
+              <a href="/administradors/new">
+                <i class="icon-plus"></i>
+                Nuevo</a>
+            </li>
+            <li class="<%= @admin_revisar_activo %>">
+              <a href="/administradors/">
+                <i class="icon-magnifier"></i>
+                Revisar</a>
+            </li>
+          </ul>
+        </li>
+          <% end %>
+
+        <li class="<%= @contenido_activo %>">
+          <a href="javascript:;">
+            <i class="icon-book-open"></i>
+            <span class="title">Contenido</span>
+            <% if @contenido_activo %>
+                <span class="selected"></span>
+                <span class="arrow open"></span>
+            <% else %>
+                <span class="arrow "></span>
+            <% end %>
+          </a>
+          <ul class="sub-menu">
+            <li class="<%= @pfrecuentes_activo %>">
+              <a href="/pfrecuentes/gestionar/">
+                <i class="icon-question"></i>
+                Preguntas Frecuentes</a>
+            </li>
+            <li class="<%= @noticias_activo %>">
+              <a href="javascript:;">
+                <i class="icon-speech"></i>
+                Noticias
+                <% if @noticias_activo %>
+                    <span class="selected"></span>
+                    <span class="arrow open"></span>
+                <% else %>
+                    <span class="arrow "></span>
+                <% end %>
+              </a>
+              <ul
+              <% if @noticias_activo %>
+              style="display: block;"
+              <% else %>
+              style="display: none;"
+              <% end %>  class="sub-menu">
+                <li class="<%= @noticias_listar_activo %>">
+                  <a href="/admin/noticias/"><i class="icon-list"></i>
+                    Listar</a>
+                </li>
+                <li class="<%= @noticias_nueva_activo %>">
+                  <a href="/noticia/nuevo">
+                    <i class="icon-plus"></i>
+                    Nueva</a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="<%= @tratamientos_activo %>">
+              <a href="javascript:;">
+                <i class="icon-speech"></i>
+                Tratamientos
+                <% if @tratamientos_activo %>
+                    <span class="selected"></span>
+                    <span class="arrow open"></span>
+                <% else %>
+                    <span class="arrow "></span>
+                <% end %>
+              </a>
+              <ul
+              <% if @tratamientos_activo %>
+              style="display: block;"
+              <% else %>
+              style="display: none;"
+              <% end %>  class="sub-menu">
+                <li class="<%= @tratamientos_listar_activo %>">
+                  <a href="/tratamientos/"><i class="icon-list"></i>
+                    Listar</a>
+                </li>
+                <li class="<%= @tratamientos_nuevo_activo %>">
+                  <a href="/tratamientos/new/">
+                    <i class="icon-plus"></i>
+                    Nuevo</a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="<%= @equipos_activo %>">
+              <a href="javascript:;">
+                <i class="icon-speech"></i>
+                Equipos
+                <% if @equipos_activo %>
+                    <span class="selected"></span>
+                    <span class="arrow open"></span>
+                <% else %>
+                    <span class="arrow "></span>
+                <% end %>
+              </a>
+              <ul
+              <% if @equipos_activo %>
+              style="display: block;"
+              <% else %>
+              style="display: none;"
+              <% end %>  class="sub-menu">
+                <li class="<%= @equipos_listar_activo %>">
+                  <a href="/equipos/"><i class="icon-list"></i>
+                    Listar</a>
+                </li>
+                <li class="<%= @equipos_nuevo_activo %>">
+                  <a href="/equipos/new/">
+                    <i class="icon-plus"></i>
+                    Nuevo</a>
+                </li>
+              </ul>
+            </li>
+
+          </ul>
+        </li>
+        <li class="<%= @datos_activo %>">
+          <a href="javascript:;">
+            <i class="icon-layers"></i>
+            <span class="title">Datos</span>
+            <% if @datos_activo %>
+                <span class="selected"></span>
+                <span class="arrow open"></span>
+            <% else %>
+                <span class="arrow "></span>
+            <% end %>
+          </a>
+          <ul class="sub-menu">
+            <li class="<%= @datos_empresa_activo %>">
+              <a href="/info/gestionar/">
+                <i class="icon-home"></i>
+                Información general</a>
+            </li>
+            <li class="<%= @datos_horario_activo %>">
+              <a href="/horarios/">
+                <i class="icon-clock"></i>
+                Horarios de atención</a>
+            </li>
+            <li class="<%= @ciudad_activo %>">
+              <a href="/ciudades/">
+                <i class="icon-globe-alt"></i>
+                Ciudades</a>
+            </li>
+            <li class="<%= @tiposangre_activo %>">
+              <a href="/tipossangre/">
+                <i class="icon-heart"></i>
+                Tipos de sangre</a>
+            </li>
+            <li class="<%= @patologia_activo %>">
+              <a href="/patologias/">
+                <i class="icon-shield"></i>
+                Patologías</a>
+            </li>
+
+
+          </ul>
+        </li>
+        </li>
+        <li class="<%= @mensajes_activo %>">
+          <a href="/mensajes/gestionar/">
+            <i class="icon-envelope"></i>
+            <span class="title">Mensajes</span>
+          </a>
+        </li>
+        <li class="">
+          <a href="/" target="_blank">
+            <i class="icon-globe"></i>
+            <span class="title">Sitio informativo</span>
+          </a>
+        </li>
+      </ul>
+      <div style="background: none repeat scroll 0% 0% rgb(187, 187, 187); width: 7px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px; height: 99.4672px;" class="slimScrollBar"></div>
+      <div style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: none repeat scroll 0% 0% rgb(234, 234, 234); opacity: 0.2; z-index: 90; right: 1px;" class="slimScrollRail"></div>
+    </div>
+    <!-- END SIDEBAR MENU -->
+  </div>
+</div>
+<!-- END SIDEBAR -->
+<!-- BEGIN CONTENT -->
+<div class="page-content-wrapper">
+  <div style="min-height:322px" class="page-content">
+    <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+    <div class="modal fade" id="portlet-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h4 class="modal-title">Modal title</h4>
+          </div>
+          <div class="modal-body">
+            Widget settings form goes here
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn blue">Save changes</button>
+            <button type="button" class="btn default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+
+
+    <!-- BEGIN PAGE CONTENT-->
+    <div class="row">
+      <div class="col-md-12">
+
+        <%= yield :contenido %>
+
+      </div>
+    </div>
+    <!-- END PAGE CONTENT-->
+  </div>
+</div>
+<!-- END CONTENT -->
+<!-- BEGIN QUICK SIDEBAR -->
+<!--Cooming Soon...-->
+<!-- END QUICK SIDEBAR -->
+</div>
+<div class="page-footer">
+
+
+</div>
+<div style="display: none;" class="scroll-to-top">
+  <i class="icon-arrow-up"></i>
+</div>
+</div>
+
+<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+<!-- BEGIN CORE PLUGINS -->
+<!--[if lt IE 9]>
+<script src="../../assets/global/plugins/respond.min.js"></script>
+<script src="../../assets/global/plugins/excanvas.min.js"></script>
+<![endif]-->
+
+<%= javascript_include_tag "backend/jquery.min", "backend/jquery-migrate.min", "backend/jquery-ui-1.10.3.custom.min",
+                           "backend/bootstrap.min", "backend/bootstrap-hover-dropdown.min", "backend/jquery.slimscroll.min", "backend/jquery.blockui.min",
+                           "backend/jquery.cokie.min", "backend/jquery.uniform.min", "backend/bootstrap-switch.min"
+%>
+<%= yield :scripts %>
+<%= javascript_include_tag "backend/metronic", "backend/layout", "backend/demo", "backend/pusher.min" %>
+
+<% if verif_notificacion %>
+    <%= javascript_include_tag "backend/jquery.notific8.min", "backend/toastr.min" %>
+<% end %>
+
+<script>
+    jQuery(document).ready(function () {
+
+        //$("#notificacion").html("<%= alerta_notif_cont %>");
+        <% if verif_notificacion %>
+
+        toastr.options = {
+            "debug": false,
+            "positionClass": "toast-top-right",
+            "onclick": null,
+            "showDuration": "5000",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+            var settings = {
+                sticky: true,
+                horizontalEdge: 'bottom',
+                verticalEdge: 'right',
+                heading: 'Recordatorio',
+                zindex: 11500
+            };
+
+            $.notific8('zindex', 11500);
+            $.notific8('<a id="linknotif" class="link-notif" href="#">Notificar</a> a pacientes sus citas para mañana.', settings);
+
+            $("#linknotif").click(function(){
+                $(".jquery-notific8-close-sticky").click();
+                $.post( "/notifcitas/", function( data ) {
+                    toastr.success("Transacción exitosa","Notificaciones enviadas");
+                });
+            });
+
+
+
+        <% end %>
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        Demo.init(); // init demo features
+
+
+        <% if alerta_notif_cont != 0 then %>
+            var notificacion = <%= alerta_notif_cont %>;
+        <% else %>
+            var notificacion = 0;
+        <% end %>
+
+        <% if alerta_mens_cont != 0 then %>
+            var mensajes = <%= alerta_mens_cont %>;
+        <% else %>
+            var mensajes = 0;
+        <% end %>
+
+        <% if alerta_citas_cont != 0 then %>
+            var citas = <%= alerta_citas_cont %>;
+        <% else %>
+            var citas = 0;
+        <% end %>
+
+        if (notificacion+mensajes+citas != 0)
+            document.title = "(" + (notificacion+mensajes+citas) + ") Clinica | Administrador";
+
+        var pusher = new Pusher('fd8f49298fafccb518e6');
+        var channel = pusher.subscribe('test_channel');
+        channel.bind('my_event', function (data) {
+            switch (data.tipo) {
+                case "nUsuario":
+                    if (notificacion != 0) {
+                        notificacion += 1;
+                        $("#notificacion").html(notificacion.toString());
+                    }
+                    else {
+                        $("#notificacion").html("1");
+                        notificacion = 1;
+                    }
+                    $("#notificacion").addClass("badge badge-success");
+
+                    $("#contenedor_notif").prepend('<li>\
+                            <a href="/paciente/'+data.mensaje+'/editar/">\
+                        <span class="label label-sm label-icon label-success">\
+                        <i class="icon-user-follow"></i>\
+                </span>\
+                Nuevo paciente <strong>'+ data.emisor +'</strong> - <span class="time">\
+                        <time class="timeago" datetime="'+ data.fecha +'"></time> </span>\
+                </a>\
+                </li>');
+
+                    document.title = "(" + (notificacion + mensajes + citas) + ") Clinica | Administrador";
+                    break;
+                case "nMensaje":
+                    if (mensajes != 0) {
+                        mensajes += 1;
+                        $("#mensajes").html(mensajes.toString());
+                    }
+                    else {
+                        $("#mensajes").html("1");
+                        mensajes = 1;
+                    }
+                    $("#mensajes").addClass("badge badge-info");
+
+                    $("#contenedor_msj").prepend('<li>\
+                            <a href="/paciente/">\
+                        <span class="photo">\
+                            <span style="padding-right: 4px" class="label label-sm label-icon label-success">\
+                        <i class="icon-envelope"></i>\
+                </span></span>\
+                    <span class="subject">\
+                            <span class="from">\
+                            '+ data.emisor +' </span>\
+                    <span class="time">\
+                            <time class="timeago" datetime="'+ data.fecha +'"></time> </span>\
+                    </span>\
+                    <span class="message">\
+                            '+ data.mensaje +'... </span>\
+                    </a>\
+                    </li>');
+
+                        document.title = "(" + (notificacion + mensajes + citas) + ") Clinica | Administrador";
+                    break;
+                case "nCita":
+                    if (citas != 0) {
+                        citas += 1;
+                        $("#citas").html(citas.toString());
+                    }
+                    else {
+                        $("#citas").html("1");
+                        citas = 1;
+                    }
+                    $("#citas").addClass("badge badge-danger");
+
+                    $("#contenedor_citas").prepend('<li>\
+                            <a href="inbox.html?a=view">\
+                        <span class="photo">\
+                            <span style="padding-right: 4px" class="label label-sm label-icon label-success">\
+                        <i class="fa fa-calendar"></i>\
+                </span></span>\
+                    <span class="subject">\
+                            <span class="from">\
+                            '+ data.emisor +' </span>\
+                    <span class="time">\
+                            <time class="timeago" datetime="'+ data.fecha +'"></time> </span>\
+                    </span>\
+                    <span class="message">\
+                            '+ data.mensaje +' </span>\
+                    </a>\
+                    </li>');
+
+                    document.title = "(" + (notificacion + mensajes + citas) + ") Clinica | Administrador";
+
+                    break;
+            }
+        });
+
+
+
+
+        //=============================
+
+        $(".btn-notif").hover(function(){
+            if (mensajes + citas != 0)
+                document.title = "(" + (mensajes + citas) + ") Clinica | Administrador";
+            else document.title = "Clinica | Administrador";
+
+            $(this).find("#notificacion").html("");
+            if(notificacion != 0){
+                $.post( "/notifs/estado/")
+                    .done(function( data ) {
+                });
+            }
+            notificacion = 0;
+        });
+
+        $(".btn-mensajes").hover(function(){
+            if (notificacion + citas != 0)
+                document.title = "(" + (notificacion + citas) + ") Clinica | Administrador";
+            else document.title = "Clinica | Administrador";
+
+            $(this).find("#mensajes").html("");
+            if(mensajes != 0){
+                $.post( "/mensajes/estado/")
+                        .done(function( data ) {
+                        });
+            }
+            mensajes = 0;
+        });
+
+        $(".btn-citas").hover(function(){
+            if (notificacion + mensajes != 0)
+                document.title = "(" + (notificacion + mensajes) + ") Clinica | Administrador";
+            else document.title = "Clinica | Administrador";
+
+            $(this).find("#citas").html("");
+            if(citas != 0){
+            $.post( "/citas/estado/")
+                    .done(function( data ) {
+                    });
+            }
+            citas = 0;
+        });
+
+        //=============================
+
+        (function timeAgo(selector) {
+
+            var templates = {
+                prefix: "",
+                suffix: "",
+                seconds: "ahora",
+                minute: "1 min",
+                minutes: "%d mins",
+                hour: "1 hora",
+                hours: "%d horas",
+                day: "1 día",
+                days: "%d días",
+                month: "1 mes",
+                months: "%d meses",
+                year: "1 año",
+                years: "%d años"
+            };
+            var template = function (t, n) {
+                return templates[t] && templates[t].replace(/%d/i, Math.abs(Math.round(n)));
+            };
+
+            var timer = function (time) {
+                if (!time) return;
+                time = time.replace(/\.\d+/, ""); // remove milliseconds
+                time = time.replace(/-/, "/").replace(/-/, "/");
+                time = time.replace(/T/, " ").replace(/Z/, " UTC");
+                time = time.replace(/([\+\-]\d\d)\:?(\d\d)/, " $1$2"); // -04:00 -> -0400
+                time = new Date(time * 1000 || time);
+
+                var now = new Date();
+                var seconds = ((now.getTime() - time) * .001) >> 0;
+                var minutes = seconds / 60;
+                var hours = minutes / 60;
+                var days = hours / 24;
+                var years = days / 365;
+
+                return templates.prefix + (
+                        seconds < 45 && template('seconds', seconds) || seconds < 90 && template('minute', 1) || minutes < 45 && template('minutes', minutes) || minutes < 90 && template('hour', 1) || hours < 24 && template('hours', hours) || hours < 42 && template('day', 1) || days < 30 && template('days', days) || days < 45 && template('month', 1) || days < 365 && template('months', days / 30) || years < 1.5 && template('year', 1) || template('years', years)) + templates.suffix;
+            };
+
+            var elements = document.getElementsByClassName('timeago');
+            for (var i in elements) {
+                var $this = elements[i];
+                if (typeof $this === 'object') {
+                    $this.innerHTML = timer($this.getAttribute('title') || $this.getAttribute('datetime'));
+                }
+            }
+            // update time every minute
+            setTimeout(timeAgo, 60);
+
+        })();
+    });
+</script>
+<!-- END JAVASCRIPTS -->
+
+
+</body>
+</html>

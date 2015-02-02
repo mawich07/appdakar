@@ -1,0 +1,209 @@
+
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag "backend/datepicker3", "backend/jquery.tagsinput", "backend/toastr.min" %>
+
+<% end %>
+
+<% content_for :contenido do %>
+<div class="col-md-6">
+  <div class="space20">
+  </div>
+  <div class="portlet box blue" style="border: 1px solid #ccc">
+
+    <div class="portlet-body " style="padding: 30px">
+      <!-- BEGIN FORM-->
+      <form action="/paciente/<%= @paciente.id %>/editar/" class="form-horizontal" method="post">
+        <div class="form-group">
+          <div>
+            <input value="<%= @paciente.cedula %>" type="text" class="form-control" placeholder="Cédula" name="paciente[cedula]" id="username2_input">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div>
+            <input value="<%= @paciente.nombres %>" type="text" class="form-control" placeholder="Nombres" name="paciente[nombres]">
+          </div>
+        </div>
+        <div class="form-group">
+          <div>
+            <input value="<%= @paciente.apellidos %>" type="text" class="form-control" placeholder="Apellidos" name="paciente[apellidos]">
+          </div>
+        </div>
+        <div class="form-group">
+          <div>
+            <input value="<%= @paciente.direccion %>" type="text" class="form-control" placeholder="Dirección" name="paciente[direccion]">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div>
+            <input value="<%= @paciente.email %>" type="email" class="form-control" placeholder="Email" name="paciente[email]">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="">
+            <input value="
+            <% @pac_telefonos.each do |telf| %>
+                <%= telf.numero %>,
+            <% end %>
+            " id="telefono" name="paciente[telefono]" type="text" class="form-control tags" value=""/>
+          </div>
+        </div>
+
+
+
+        <div class="form-group">
+          <select name="paciente[genero]" class="form-control">
+            <option>- Género -</option>
+            <% if @paciente.genero == "m" %>
+                <option value="m" selected>Masculino</option>
+                <option value="f">Femenino</option>
+            <% else %>
+                <option value="m">Masculino</option>
+                <option value="f" selected>Femenino</option>
+            <% end %>
+
+          </select>
+        </div>
+
+
+        <div class="form-group">
+          <select name="paciente[tipo_sangre]" class="form-control">
+            <option>- Tipo de sangre -</option>
+            <% @tipo_sangre.each do |t| %>
+                <% if @paciente.tipo_sangre == t.tipo then %>
+                    <option value="<%= t.tipo %>" selected><%= t.tipo %></option>
+                <% else %>
+                    <option value="<%= t.tipo %>"><%= t.tipo %></option>
+                <% end %>
+
+            <% end %>
+
+          </select>
+        </div>
+
+        <div class="form-group">
+          <select name="paciente[ciudad]" class="form-control">
+            <option>- Ciudad -</option>
+            <% @ciudades.each do |ciudad| %>
+                <% if @paciente.ciudad != nil and @paciente.ciudad.id == ciudad.id then %>
+                    <option class="ciudad" value="<%= ciudad.id %>" selected><%= ciudad.nombre %></option>
+                <% else %>
+                    <option class="ciudad" value="<%= ciudad.id %>"><%= ciudad.nombre %></option>
+
+                <% end %>
+
+            <% end %>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <div>
+            <input name="paciente[fecha_nac]" class="form-control form-control-inline input-medium date-picker" type="text" value="<%= @paciente.fecha_nac %>" placeholder="Fecha de nacimiento"/>
+          </div>
+        </div>
+
+
+        <button type="submit" class="btn green">Actualzar perfil</button>
+      </form>
+      <!-- END FORM-->
+    </div>
+  </div>
+
+</div>
+    <% end %>
+
+<% content_for :scripts do %>
+<%= javascript_include_tag "backend/bootstrap-datepicker", "backend/jquery.tagsinput.min",
+    "backend/toastr.min" %>
+
+<script type="text/javascript" charset="utf-8">
+    $(function(){
+
+        toastr.options = {
+            "debug": false,
+            "positionClass": "toast-top-right",
+            "onclick": null,
+            "showDuration": "3000",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        <% if @notif %>
+            toastr.success("Perfil del paciente actualizado", "Transacción exitosa");
+        <% end %>
+
+        $("#username2_input").change(function () {
+            var input = $(this);
+
+            if (input.val() === "") {
+                return;
+            }
+
+            input.attr("readonly", true).
+                    attr("disabled", true).
+                    addClass("spinner");
+
+            $.get('/paciente/verificar/', {
+                cedula: input.val()
+            }, function (res) {
+                input.attr("readonly", false).
+                        attr("disabled", false).
+                        removeClass("spinner");
+
+                // change popover font color based on the result
+                if (res.status == 'OK') {
+                    input.closest('.form-group').removeClass('has-error').addClass('has-success');
+                    $('.icon-exclamation-sign', input.closest('.form-group')).remove();
+                    input.before('<i class="icon-ok"></i>');
+                    input.data('bs.popover').tip().removeClass('error').addClass('success');
+                } else {
+                    input.closest('.form-group').removeClass('has-success').addClass('has-error');
+                    $('.icon-ok', input.closest('.form-group')).remove();
+                    input.before('<i class="icon-exclamation-sign"></i>');
+
+                    input.popover('destroy');
+                    input.popover({
+                        'html': true,
+                        'placement': (Metronic.isRTL() ? 'left' : 'right'),
+                        'container': 'body',
+                        'content': res.message
+                    });
+                    input.popover('show');
+                    input.data('bs.popover').tip().removeClass('success').addClass('error');
+
+                    Metronic.setLastPopedPopover(input);
+                }
+
+            }, 'json');
+
+        });
+
+        if (jQuery().datepicker) {
+            $('.date-picker').datepicker({
+                rtl: Metronic.isRTL(),
+                orientation: "left",
+                autoclose: true,
+                format: "yyyy-mm-dd"
+            });
+            //$('body').removeClass("modal-open"); // fix bug when inline picker is used in modal
+        }
+
+        $('#telefono').tagsInput({
+            width: 'auto',
+            'onAddTag': function () {
+                //alert(1);
+            },
+            'defaultText':'Teléfono'
+        });
+
+    });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

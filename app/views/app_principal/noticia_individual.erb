@@ -1,0 +1,151 @@
+
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag "frontend/proton-style.min" %>
+    <style>
+        .fa{
+            color: #999 !important;
+        }
+    </style>
+<% end %>
+
+<% content_for :contenido do %>
+    <div class="breadCrumbs_2">
+      <div class="container xsx-width">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12">
+            <h2>NOTICIAS</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container xsx-width">
+      <div class="row">
+        <!-- ===== Begin Triggers List ===== -->
+        <aside class="col-md-3">
+          <div class="widget widget-recent-post">
+            <!-- ===== Begin Title Content ===== -->
+            <div class="titleC">
+              <h4>ÚLTIMAS NOTICIAS</h4>
+              <div class="right-linie">
+                <span></span>
+              </div>
+            </div>
+            <!-- ===== End Title Content ===== -->
+
+            <!-- ===== Begin Recent Post ===== -->
+
+            <dl>
+              <% @ultimas_noticias.each do |noti| %>
+                  <dt><img src="<%= noti.imagen_url %>" width="70" height="50" alt="recent-1"></dt>
+                  <dd>
+                    <h4><a href="/vernoticia/<%= noti.id %>"><%= noti.titulo %></a></h4>
+                    <p><%= noti.created_at.to_date.strftime("%d/%m/%Y") %></p>
+                  </dd>
+              <% end %>
+
+            </dl>
+            <!-- ===== End Recent Post ===== -->
+          </div>
+
+        </aside>
+        <!-- ===== End Triggers List ===== -->
+
+        <div class="col-md-9">
+
+              <div class="col-md-12">
+                <div class="elements_news_c">
+                  <div class="caption_news_c news_1">
+                    <div class="icon">
+                      <div class="icon-1">
+                        <i class="fa fa-phone fa-lg" style="color: #fff !important;"></i>
+                      </div>
+                      <div class="icon-2">
+                        <!-- ===== You can change the icon just below ===== -->
+                        <i class="fa fa-pencil fa-lg"></i>
+                      </div>
+                    </div>
+                    <h4><a href="#"><%= @n.titulo %></a></h4>
+                    <p><a href="#"><%= @n.created_at.to_date.strftime("%d/%m/%Y") %> </a></p>
+                    <p><%= @n.noticia.html_safe %></p>
+                  </div>
+                </div>
+              </div>
+
+        </div>
+        <!-- ===== Begin All Sections ===== -->
+
+        <!-- ===== End Thumbnails ===== -->
+
+        <!-- ===== Begin Pagination ===== -->
+
+        <!-- ===== End Pagination ===== -->
+      </div>
+
+
+
+    </div>
+    <!-- ===== End All Sections ===== -->
+    </div>
+
+    </div>
+<% end %>
+
+<% content_for :inscripts do %>
+    <%= javascript_include_tag "frontend/jstree.min" %>
+    <script>
+        $(function() {
+            $('#jstree-proton-1').jstree({
+                'core': {
+                    'themes': {
+                        'name': 'proton',
+                        'responsive': true
+                    }
+                }
+            });
+            $('#jstree-proton-2').jstree({
+                'plugins': ["wholerow"],
+                'core': {
+                    'themes': {
+                        'name': 'proton',
+                        'responsive': true
+                    }
+                }
+            });
+            $('#jstree-proton-3').jstree({
+                'plugins': ["wholerow", "checkbox"],
+                'core': {
+                    'data': [{
+                        "text": "Wholerow with checkboxes",
+                        "children": [{
+                            "text": "initially selected",
+                            "state": {
+                                "selected": true
+                            }
+                        }, {
+                            "text": "custom icon URL",
+                            "icon": "./assets/images/tree_icon.png"
+                        }, {
+                            "text": "initially open",
+                            "state": {
+                                "opened": true
+                            },
+                            "children": ["Another node"]
+                        }, {
+                            "text": "custom icon class",
+                            "icon": "glyphicon glyphicon-leaf"
+                        }]
+                    },
+                        "And wholerow selection"
+                    ],
+                    'themes': {
+                        'name': 'proton',
+                        'responsive': true
+                    }
+                }
+            });
+        });
+
+    </script>
+<% end %>
+
+<%= render template: "layouts/usuariobase" %>

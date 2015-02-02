@@ -1,0 +1,102 @@
+<% content_for :contenido do %>
+<div class="container xsx-width">
+  <div class="row">
+    <!-- ===== Begin Triggers List ===== -->
+    <aside class="col-md-3 allD">
+      <ul class="">
+        <li><a href="#quieness" class="active">Quienes Somos <i class="fa fa-angle-right"></i></a></li>
+        <li><a href="#trayectoria">Nuestra Trayectoria <i class="fa fa-angle-right"></i></a></li>
+        <li><a href="#mis">Misión <i class="fa fa-angle-right"></i></a></li>
+        <li><a href="#vis">Visión <i class="fa fa-angle-right"></i></a></li>
+        <li><a href="#valores">Valores <i class="fa fa-angle-right"></i></a></li>
+        <li><a href="#calidad">Políticas de calidad <i class="fa fa-angle-right"></i></a></li>
+      </ul>
+
+    </aside>
+    <!-- ===== End Triggers List ===== -->
+
+    <!-- ===== Begin All Sections ===== -->
+    <div class="col-md-9">
+      <div class="intro_faq">
+        <h3>Pediatric Clinic</h3>
+        <p><a href="#">Etiam rhoncus nisi quis magna posuere, non tincidunt sem mattis. Nulla ftacilisi.</a> Proin ornare ac leo et mattis. Nulla id augue arcu. Suspendisse consectetur pretium nulla quis lacinia. Vestibulum eu tortor id neque varius iaculis. Mauris malesuada consequat auctor. Nam eget elementum justo, non aliquet dui. Maecenas vel nulla lacus.</p>
+      </div>
+
+      <div class="panel panel-primary" id="quieness">
+        <div class="panel-heading">
+          <h3 class="panel-title">Quienes Somos</h3>
+        </div>
+        <div class="panel-body">
+          <div class="col-md-9" style="color: #666">
+            <%= @info.quienes_somos %>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-primary" id="trayectoria">
+        <div class="panel-heading">
+          <h3 class="panel-title">Nuestra Trayectoria</h3>
+        </div>
+        <div class="panel-body">
+          <div class="col-md-9" style="color: #666">
+            <%= @info.trayectoria %>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-primary" id="mis">
+        <div class="panel-heading">
+          <h3 class="panel-title">Misión</h3>
+        </div>
+        <div class="panel-body">
+          <div id="valores" class="col-md-9" style="color: #666">
+            <%= @info.mision %>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-primary" id="vis">
+        <div class="panel-heading">
+          <h3 class="panel-title">Visión</h3>
+        </div>
+        <div class="panel-body">
+          <div id="valores" class="col-md-9" style="color: #666">
+            <%= @info.vision %>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Valores</h3>
+        </div>
+        <div class="panel-body">
+          <div class="col-md-9" style="color: #666">
+            <%= @info.valores %>
+          </div>
+        </div>
+      </div>
+      <div id="calidad"></div>
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Políticas de calidad</h3>
+        </div>
+        <div class="panel-body">
+          <div class="col-md-9" style="color: #666">
+            <%= @info.politicas_calidad %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ===== End All Sections ===== -->
+  </div>
+</div>
+<% end %>
+
+<% content_for :inscripts do %>
+    <!-- ========== jQuery REVOLUTION Slider Plugins ========== -->
+
+
+
+    <!-- ========== Royal Slider Plugins ========== -->
+
+
+<% end %>
+
+<%= render template: "layouts/usuariobase" %>

@@ -1,0 +1,211 @@
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag "backend/froala_editor.min", "backend/froala_style.min" %>
+
+<% end %>
+
+<% content_for :contenido do %>
+<div class="row">
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <a class="dashboard-stat dashboard-stat-light blue-soft" href="/mensajes/gestionar/">
+      <div class="visual">
+        <i class="fa fa-comments"></i>
+      </div>
+      <div class="details">
+        <div class="number">
+          <%= @mensajes %>
+        </div>
+        <div class="desc">
+          Mensajes no leídos
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <a class="dashboard-stat dashboard-stat-light red-soft" href="/citas/gestionar/">
+      <div class="visual">
+        <i class="fa fa-calendar"></i>
+      </div>
+      <div class="details">
+        <div class="number">
+          <%= @citas %>
+        </div>
+        <div class="desc">
+          Citas para hoy
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <a class="dashboard-stat dashboard-stat-light green-soft" href="/paciente/listar/">
+      <div class="visual">
+        <i class="fa fa-edit"></i>
+      </div>
+      <div class="details">
+        <div class="number">
+          <%= @pacientes %>
+        </div>
+        <div class="desc">
+          Pacientes registrados
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="dashboard-stat dashboard-stat-light purple-soft">
+      <div class="visual">
+        <i class="fa fa-user-md"></i>
+      </div>
+      <div class="details">
+        <div class="number">
+          <%= @consultas %>
+        </div>
+        <div class="desc">
+          Consultas atendidas
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+
+<div class="col-md-6 col-sm-6">
+  <div class="portlet light ">
+    <div class="portlet-title">
+      <div class="caption">
+        <i class="icon-cursor font-purple-intense hide"></i>
+        <span class="caption-subject font-purple-intense bold uppercase">ESTADÍSTICAS GENERALES MENSUALES</span>
+      </div>
+    </div>
+    <div class="portlet-body">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="easy-pie-chart">
+            <div class="number transactions" data-percent="<%= @consultas_mensuales %>">
+												<span>
+												<% if @consultas_mensuales > 0 then %>+<% else %>-<% end %>
+                                                  <% if @consultas_mensuales > 0 then %><%= @consultas_mensuales %> <% else %> <% if @consultas_mensuales < 0 then %> <%= @consultas_mensuales*-1 %> <% else %>100 <% end %><% end %></span>
+              %
+            </div>
+            <span class="title">
+              Consultas
+            </span>
+          </div>
+        </div>
+        <div class="margin-bottom-10 visible-sm">
+        </div>
+        <div class="col-md-4">
+          <div class="easy-pie-chart">
+            <div class="number visits" data-percent="<%= @pacientes_mensuales %>">
+												<span>
+                                                  <%= @pacientes_mensuales %></span>
+              %
+            </div>
+            <a class="title" href="#">
+              Nuevos pacientes
+            </a>
+          </div>
+        </div>
+        <div class="margin-bottom-10 visible-sm">
+        </div>
+        <div class="col-md-4">
+          <div class="easy-pie-chart">
+            <div class="number bounce" data-percent="46">
+												<span>
+												-46 </span>
+              %
+            </div>
+            <a class="title" href="#">
+              ????
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><div class="col-md-6 col-sm-6">
+<div class="portlet light ">
+<div class="portlet-title">
+  <div class="caption">
+    <i class="icon-share font-blue-steel hide"></i>
+    <span class="caption-subject font-green-haze bold uppercase">Citas pendientes</span>
+    <span class="caption-helper">Hoy y mañana</span>
+  </div>
+  <div class="actions">
+    <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#">
+    </a>
+  </div>
+</div>
+<div class="portlet-body">
+<div class="scroller" style="height: 300px;" data-always-visible="1" data-rail-visible="0">
+<ul class="feeds">
+<% @citas_pendientes.each do |cita| %>
+
+    <li>
+      <div class="col1">
+        <div class="cont">
+          <div class="cont-col1">
+            <div class="label label-sm
+            <% if cita.fecha == Date.today() then %>
+          label-primary"> <i class="fa fa-chevron-circle-down"></i>
+          <% else %>
+          label-success"> <i class="fa fa-chevron-circle-right"></i>
+          <% end %>
+            </div>
+          </div>
+          <div class="cont-col2">
+            <div class="desc"
+                 <% if cita.fecha == Date.today() then %>
+
+                 <% if Time.new(Time.new().year,Time.new().month,Time.new().day,cita.hora.split(":")[0],cita.hora.split(":")[1]) < Time.new() then %>
+            style="text-decoration: line-through"
+                 <% end %>
+                 <% end %>
+                 >
+              <% if cita.paciente != nil %>
+                  <%= cita.paciente.nombres %> <%= cita.paciente.apellidos %>
+              <% else  %>
+                  <%= cita.nombre %>
+              <% end %>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col2">
+        <div class="date">
+          <% if cita.fecha == Date.today() then %>
+          Hoy
+          <% else %>
+          Mañana
+          <% end %>
+          <%= cita.hora %>
+        </div>
+      </div>
+    </li>
+<% end %>
+</ul>
+</div>
+<div class="scroller-footer">
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/froala/froala_editor.min", "backend/froala/es",
+    "backend/jquery.easypiechart.min", "backend/index" %>
+    <script>
+        $(function() {
+            $('#edit').editable({inlineMode: false, language: 'es'});
+            Index.initMiniCharts();
+        });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

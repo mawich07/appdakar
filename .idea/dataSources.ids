@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source source="LOCAL" name="Rails CarrierWaveExample: development" uuid="46cefa9a-15d0-4d31-88bb-68b1005a25ea">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+  <data-source source="LOCAL" name="Rails CarrierWaveExample: test" uuid="ca86c075-4c04-4add-a115-a3e5cc6d88ac">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+  <data-source source="LOCAL" name="Rails CarrierWaveExample: production" uuid="7f9d5548-6a24-4c03-91d9-71fd4c3de428">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+</component>

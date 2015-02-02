@@ -1,0 +1,198 @@
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag "backend/dataTables.bootstrap" %>
+    <%= stylesheet_link_tag  "backend/toastr.min", "backend/bootstrap-modal-bs3patch",
+                             "backend/bootstrap-modal", "backend/sweet-alert", "backend/toastr.min" %>
+    <style>
+        .revisar{
+            color: #4D5B69;
+        }
+        .editar{
+            color: #1BA39C;
+        }.eliminar{
+            color: #dc626a;
+        }.acciones{
+            cursor: pointer;
+        }.control-label{
+            color: #7b7b7b;
+        }.contenido{
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+
+<% end %>
+
+<% content_for :contenido do %>
+    <div class="col-md-12">
+      <div class="space20">
+      </div>
+      <div class="portlet box blue" style="border: 1px solid #ccc">
+
+        <div class="portlet-body " style="padding: 30px">
+
+          <div class="table-toolbar">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group input-large">
+												<span class="input-group-btn">
+			<button id="criterioBusq" type="button" class="btn blue-madison">
+                  Título
+            </button>
+
+												</span>
+                  <input id="txtBusq" class="form-control" placeholder="Búsqueda..." type="text" value="<%= @txtBusq %>">
+												<span class="input-group-btn">
+            <button id="btnBusq" class="btn blue-madison" type="button"><i class="icon-magnifier"></i></button>
+												</span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="btn-group pull-right">
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <table class="table table-striped table-bordered table-hover" id="sample_1">
+            <thead>
+            <tr>
+              <th>
+                Título
+              </th>
+              <th>
+                Fecha y hora de creación
+              </th>
+              <th>
+                Creador
+              </th>
+              <th>
+                Acciones
+              </th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <% @noticias.each do |p| %>
+
+                <tr class="odd gradeX">
+                  <td>
+                    <%= p.titulo %>
+                  </td>
+                  <td>
+                    <%= p.created_at %>
+                  </td>
+                  <td>
+                    <%= p.administrador.nombres %> <%= p.administrador.apellidos %>
+                  </td>
+                  <td>
+                    &nbsp;
+                    <i data-container="body" data-placement="top" data-id="<%= p.id %>" data-original-title="Revisar" class="acciones revisar fa fa-eye tooltips ver-noticia"></i>&nbsp;
+                    <a href="/noticia/<%= p.id %>/editar/"><i data-container="body" data-placement="top" data-original-title="Editar" class="acciones editar fa fa-pencil tooltips"></i></a>&nbsp;
+                    <i data-container="body" data-id="<%= p.id %>" data-placement="top" data-original-title="Eliminar" class="acciones eliminar fa fa-trash tooltips"></i>&nbsp;
+                  </td>
+                </tr>
+
+            <% end %>
+
+
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
+    </div>
+
+    <form id="frmEliminarNoticia" action="/noticia/eliminar" method="post" style="display: none">
+      <input type="text" id="idnoticia" name="idnoticia"/>
+    </form>
+
+    <div class="modal fade" id="ajax-modal" role="basic" aria-hidden="true">
+      <div class="page-loading page-loading-boxed">
+        <img src="../../assets/global/img/loading-spinner-grey.gif" alt="" class="loading">
+										<span>
+										&nbsp;&nbsp;Loading... </span>
+      </div>
+      <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+      </div>
+    </div>
+<% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/jquery.dataTables.min", "backend/dataTables.bootstrap",
+                               "backend/table-managed", "backend/bootstrap-modalmanager",
+                               "backend/bootstrap-modal", "backend/sweet-alert.min", "backend/toastr.min" %>
+    <script>
+        $(function() {
+
+            $(".eliminar").click(function(){
+                var id = $(this).attr("data-id");
+                swal({
+                            title: "¿Eliminar?",
+                            text: "La noticia se borrará permanentemente!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            cancelButtonText: "Cancelar",
+                            confirmButtonText: "Sí, eliminarla!",
+                            closeOnConfirm: true
+                        },
+                        function(){
+                            $("#idnoticia").val(id);
+                            $("#frmEliminarNoticia").submit();
+                        });
+            });
+
+            TableManaged.init();
+
+            var $modal = $('#ajax-modal');
+
+            $('.ver-noticia').on('click', function(){
+                var url = '/noticia/revisar/?id='+$(this).attr("data-id");
+                $('body').modalmanager('loading');
+
+                setTimeout(function(){
+                    $modal.load(url, '', function(){
+                        $modal.modal();
+                    });
+                }, 1000);
+            });
+
+            <% if @notifeliminar %>
+            toastr.options = {
+                "debug": false,
+                "positionClass": "toast-top-right",
+                "onclick": null,
+                "showDuration": "3000",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            toastr.success("Noticia eliminada", "Transacción exitosa");
+            <% end %>
+
+
+
+            $("#txtBusq").keydown(function(e){
+                if(e.keyCode == 13 && $(this).val() != "") {
+                    window.location = "/noticia/listar/"+ $(this).val();
+                }
+            });
+
+            $("#btnBusq").click(function(e){
+                if ($("#txtBusq").val() != ""){
+                    window.location = "/noticia/listar/"+ $("#txtBusq").val();
+                }
+            });
+
+        });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

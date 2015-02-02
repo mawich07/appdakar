@@ -1,0 +1,139 @@
+
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag "backend/datepicker3", "backend/toastr.min", "backend/select2" %>
+
+<% end %>
+
+<% content_for :contenido do %>
+    <div class="col-md-6">
+      <div class="space20">
+      </div>
+      <div class="portlet box blue" style="border: 1px solid #ccc">
+
+        <div class="portlet-body " style="padding: 30px">
+          <!-- BEGIN FORM-->
+          <form action="/paciente/<%= @paciente.id %>/historial/nuevo" class="form-horizontal" method="post">
+
+            <div class="form-group">
+              <div>
+                <input name="historial[fecha]" class="form-control form-control-inline input-medium date-picker" type="text" placeholder="Fecha"/>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="">
+                <select name="historial[patologia]" class="form-control input-xlarge select2me" data-placeholder="Patología">
+                  <option value=""></option>
+                  <% @patologias.each do |pat| %>
+                      <option value="<%= pat.id %>"><%= pat.nombre %></option>
+                  <% end %>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div>
+                <textarea name="historial[detalle]" class="form-control" placeholder="Detalles" rows="3"></textarea>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div>
+                <textarea name="historial[tratamiento]" class="form-control" placeholder="Tratamiento" rows="3"></textarea>
+              </div>
+            </div>
+
+            <button type="submit" class="btn green">Guardar</button>
+          </form>
+          <!-- END FORM-->
+        </div>
+      </div>
+
+    </div>
+<% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/bootstrap-datepicker",
+                               "backend/toastr.min", "backend/select2.min", "backend/components-dropdowns" %>
+
+    <script type="text/javascript" charset="utf-8">
+        $(function(){
+
+            toastr.options = {
+                "debug": false,
+                "positionClass": "toast-top-right",
+                "onclick": null,
+                "showDuration": "3000",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            <% if @notif %>
+            toastr.success("Paciente registrado", "Transacción exitosa");
+            <% end %>
+
+            $("#username2_input").change(function () {
+                var input = $(this);
+
+                if (input.val() === "") {
+                    return;
+                }
+
+                input.attr("readonly", true).
+                        attr("disabled", true).
+                        addClass("spinner");
+
+                $.get('/paciente/verificar/', {
+                    cedula: input.val()
+                }, function (res) {
+                    input.attr("readonly", false).
+                            attr("disabled", false).
+                            removeClass("spinner");
+
+                    // change popover font color based on the result
+                    if (res.status == 'OK') {
+                        input.closest('.form-group').removeClass('has-error').addClass('has-success');
+                        $('.icon-exclamation-sign', input.closest('.form-group')).remove();
+                        input.before('<i class="icon-ok"></i>');
+                        input.data('bs.popover').tip().removeClass('error').addClass('success');
+                    } else {
+                        input.closest('.form-group').removeClass('has-success').addClass('has-error');
+                        $('.icon-ok', input.closest('.form-group')).remove();
+                        input.before('<i class="icon-exclamation-sign"></i>');
+
+                        input.popover('destroy');
+                        input.popover({
+                            'html': true,
+                            'placement': (Metronic.isRTL() ? 'left' : 'right'),
+                            'container': 'body',
+                            'content': res.message
+                        });
+                        input.popover('show');
+                        input.data('bs.popover').tip().removeClass('success').addClass('error');
+
+                        Metronic.setLastPopedPopover(input);
+                    }
+
+                }, 'json');
+
+            });
+
+            if (jQuery().datepicker) {
+                $('.date-picker').datepicker({
+                    rtl: Metronic.isRTL(),
+                    orientation: "left",
+                    autoclose: true,
+                    format: "yyyy-mm-dd"
+                });
+                //$('body').removeClass("modal-open"); // fix bug when inline picker is used in modal
+            }
+
+        });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

@@ -1,0 +1,94 @@
+<% content_for :estilos do %>
+    <%= stylesheet_link_tag "backend/froala_editor.min", "backend/froala_style.min" %>
+    <%= stylesheet_link_tag  "backend/toastr.min" %>
+
+<% end %>
+
+<% content_for :contenido do %>
+    <div class="col-md-12">
+      <div class="space20">
+      </div>
+      <div class="portlet box blue" style="border: 1px solid #ccc">
+
+        <div class="portlet-body " style="padding: 30px">
+<form>
+  <div class="form-group">
+    <div>
+      <input id="titulo" class="form-control form-control" type="text" value="<%= @noticia.titulo %>" placeholder="Título" autofocus/>
+    </div>
+  </div>
+  <textarea id="edit" name="content"></textarea>
+  <br/>
+  <button id="guardar" class="btn blue">Actualizar</button>
+
+</form>
+          <form id="frmNoticia" style="display: none" action="/noticia/<%= @noticia.id %>/editar/" method="post">
+            <input name="ntitulo" type="text" id="ntitulo"/>
+            <textarea name="noticia" id="noticia" cols="30" rows="10"></textarea>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+<% end %>
+
+<% content_for :scripts do %>
+    <%= javascript_include_tag "backend/froala/froala_editor.min", "backend/froala/es", "backend/toastr.min",
+                               "backend/froala/tables.min", "backend/froala/font_size.min", "backend/froala/lists.min" %>
+    <script>
+        $(function() {
+
+
+            toastr.options = {
+                "debug": false,
+                "positionClass": "toast-top-right",
+                "onclick": null,
+                "showDuration": "3000",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            <% if @notif %>
+            toastr.success("Noticia actualizada", "Transacción exitosa");
+            <% end %>
+
+            $("#guardar").click(function(e){
+                e.preventDefault();
+                $("#ntitulo").val( $("#titulo").val());
+                $("#noticia").html($("#edit").editable("getHTML", true, true));
+                $("#frmNoticia").submit();
+            });
+
+            $('#edit').editable({inlineMode: false, language: 'es',
+                plainPaste: true,
+                buttons: ["bold", "italic", "underline", "strikeThrough", "subscript", "superscript", "fontFamily", "fontSize", "color", "formatBlock", "blockStyle", "align", "insertOrderedList", "insertUnorderedList", "outdent", "indent", "createLink", "insertImage", "table", "undo", "redo", "html", "insertHorizontalRule", "removeFormat"],
+                imageUploadURL: '/imagen/subir/',
+                imageUploadParams: {
+                    return_to: window.location.href
+                },
+                imageErrorCallback: function (error) {
+                    console.log('ERROR: %O', error);
+
+                    var scroll_pos=(0);
+                    var message = error.message + ' (Code: ' + error.code + ')';
+                    var flash =  '<div id="flash_container"><div id="flash" class="flash flash_error" style="visibility: visible; opacity: 1;">'+ message +'</div></div>';
+
+                    $('#content').prepend(flash);
+                    $('html, body').animate({scrollTop:(scroll_pos)}, '2000');
+                    setTimeout(function(){
+                        $('#flash_container').fadeOut('slow');
+                        $('#flash_container').remove();
+                    }, 2000);}
+        });
+            $("#edit").editable("setHTML", '<%= @noticia.noticia.html_safe %>', false);
+            $("#edit").editable("focus");
+            });
+    </script>
+<% end %>
+
+<%= render template: "layouts/adminbase" %>

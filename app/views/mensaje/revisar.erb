@@ -1,0 +1,46 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+    <h4 class="modal-title"><%= @mensaje.nombre.to_s() %></h4>
+  </div>
+  <div class="modal-body">
+    <form role="form">
+      <div class="form-body">
+        <div class="form-group">
+          <label class="control-label">Fecha</label>
+          <div class="">
+            <i class="tooltips" data-original-title="Email address" data-container="body"></i>
+            <input readonly class="form-control" type="text" value="<%= @mensaje.created_at.to_s() %>">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label">Email</label>
+          <div class="">
+            <i class="tooltips" data-original-title="Email address" data-container="body"></i>
+            <input readonly class="form-control" type="text" value="<%= @mensaje.email.to_s() %>">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label">Motivo</label>
+          <div class="">
+            <i class="tooltips" data-original-title="Email address" data-container="body"></i>
+            <input readonly class="form-control" type="text" value="<%= @mensaje.motivo.to_s() %>">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Mensaje</label>
+          <div class="">
+            <i class="tooltips" data-original-title="You look OK!" data-container="body"></i>
+            <textarea readonly class="form-control" rows="3"><%= @mensaje.mensaje.to_s() %></textarea>
+          </div>
+        </div>
+      </div>
+
+    </form>
+    <div class="modal-footer">
+      <button type="button" class="btn default" data-dismiss="modal">Cerrar</button>
+    </div>
+  </div>
+
+</div>
